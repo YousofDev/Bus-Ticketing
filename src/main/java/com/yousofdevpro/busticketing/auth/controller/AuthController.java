@@ -5,6 +5,7 @@ import com.yousofdevpro.busticketing.auth.dto.LoginResponseDto;
 import com.yousofdevpro.busticketing.auth.dto.RegisterRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.RegisterResponseDto;
 import com.yousofdevpro.busticketing.auth.service.AuthService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthController {
     
     private final AuthService authService;

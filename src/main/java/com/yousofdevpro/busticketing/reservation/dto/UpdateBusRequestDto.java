@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class AddBusRequestDto {
+public class UpdateBusRequestDto {
     
     @NotBlank(message = "Bus name is required")
     private String name;

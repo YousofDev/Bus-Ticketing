@@ -2,12 +2,14 @@ package com.yousofdevpro.busticketing.reservation.controller;
 
 import com.yousofdevpro.busticketing.reservation.dto.AddBusRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.UpdateBusRequestDto;
+import com.yousofdevpro.busticketing.reservation.model.Bus;
 import com.yousofdevpro.busticketing.reservation.service.BusService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +26,29 @@ public class BusController {
     }
     
     @PostMapping
-    public void addBus(AddBusRequestDto addBusRequestDto){
-        busService.addBus(addBusRequestDto);
+    public ResponseEntity<BusResponseDto> addBus(
+            @Validated @RequestBody AddBusRequestDto addBusRequestDto){
+        var createdBus = busService.addBus(addBusRequestDto);
+        return new ResponseEntity<>(createdBus, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/{id}")
+    public BusResponseDto getBus(@PathVariable Long id) {
+        return busService.getBusById(id);
+    }
+    
+    @PutMapping("/{id}")
+    public BusResponseDto updateBus(
+            @Validated @RequestBody UpdateBusRequestDto updateBusRequestDto,
+            @PathVariable Long id) {
+        return busService.updateBusById(updateBusRequestDto, id);
+    }
+    
+    @DeleteMapping("/{id}")
+    public void deleteBus(@PathVariable Long id) {
+        busService.deleteBusById(id);
+    }
+    
+    
     
 }

@@ -23,6 +23,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -31,6 +34,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     
+    private static final Set<String> ALLOWED_URLS = new HashSet<>(
+            Arrays.asList(
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/login"));
+    
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -38,14 +46,27 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain)
             throws ServletException, IOException {
         
+        String requestURI = request.getRequestURI();
+        boolean isAllowed = ALLOWED_URLS.contains(requestURI);
+        
         final String authHeader = request.getHeader("Authorization");
         
         if (authHeader==null || !authHeader.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
-            return;
+            
+            if (!isAllowed) {
+                writeException(
+                        response,
+                        HttpStatus.FORBIDDEN,
+                        "Authorization header missing or invalid"
+                );
+                return;
+            } else {
+                chain.doFilter(request, response);
+                return;
+            }
         }
         
-        try{
+        try {
             String jwt = authHeader.substring(7);
             String username = jwtUtil.extractUsername(jwt);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -68,19 +89,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             
         } catch (AuthenticationException e) {
-            writeException(response, HttpStatus.UNAUTHORIZED,  e);
+            writeException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (InvalidJwtException e) {
-            writeException(response, HttpStatus.FORBIDDEN, e);
+            writeException(response, HttpStatus.FORBIDDEN, e.getMessage());
         }
         
     }
     
-    private void writeException(HttpServletResponse response, HttpStatus status, Exception e) throws IOException {
+    private void writeException(
+            HttpServletResponse response,
+            HttpStatus status,
+            String message) throws IOException {
+        
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         
         ErrorDetails errorDetails = new ErrorDetails(
-                e.getMessage(),
+                message,
                 status.value()
         );
         
