@@ -30,6 +30,7 @@ public class BusService {
                 .name(addBusRequestDto.getName())
                 .busNumber(addBusRequestDto.getBusNumber())
                 .totalSeats(addBusRequestDto.getTotalSeats())
+                .isActive(addBusRequestDto.getIsActive())
                 .build();
         
         bus = busRepository.save(bus);
@@ -77,6 +78,10 @@ public class BusService {
     
     @Transactional
     public void deleteBusById(Long id) {
+        
+        // TODO: fetch appointments by bus id
+        // TODO: DON'T DELETE, if linked with any appointments
+        
         busRepository.deleteById(id);
     }
 }
