@@ -1,9 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
-import com.yousofdevpro.busticketing.reservation.dto.AddRouteRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.RouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.UpdateRouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Route;
 import com.yousofdevpro.busticketing.reservation.repository.RouteRepository;
 import lombok.AllArgsConstructor;
@@ -23,12 +22,12 @@ public class RouteService {
     }
     
     @Transactional
-    public RouteResponseDto addRoute(AddRouteRequestDto addRouteRequestDto) {
+    public RouteResponseDto addRoute(RouteRequestDto routeRequestDto) {
         
         var route = Route.builder()
-                .departurePoint(addRouteRequestDto.getDeparturePoint())
-                .destinationPoint(addRouteRequestDto.getDestinationPoint())
-                .isActive(addRouteRequestDto.getIsActive())
+                .departurePoint(routeRequestDto.getDeparturePoint())
+                .destinationPoint(routeRequestDto.getDestinationPoint())
+                .isActive(routeRequestDto.getIsActive())
                 .build();
         
         route = routeRepository.save(route);
@@ -50,7 +49,7 @@ public class RouteService {
     
     
     @Transactional
-    public RouteResponseDto updateRoute(UpdateRouteRequestDto updateRouteRequestDto, Long id) {
+    public RouteResponseDto updateRoute(RouteRequestDto routeRequestDto, Long id) {
         
         // TODO: fetch appointments by route id
         // TODO: DON'T UPDATE ROUTE: if linked with any appointments
@@ -59,9 +58,9 @@ public class RouteService {
         var route = routeRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Route not found"));
         
-        route.setDeparturePoint(updateRouteRequestDto.getDeparturePoint());
-        route.setDestinationPoint(updateRouteRequestDto.getDestinationPoint());
-        route.setIsActive(updateRouteRequestDto.getIsActive());
+        route.setDeparturePoint(routeRequestDto.getDeparturePoint());
+        route.setDestinationPoint(routeRequestDto.getDestinationPoint());
+        route.setIsActive(routeRequestDto.getIsActive());
         
         route = routeRepository.save(route);
         

@@ -1,8 +1,7 @@
 package com.yousofdevpro.busticketing.reservation.controller;
 
-import com.yousofdevpro.busticketing.reservation.dto.AddRouteRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.RouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.UpdateRouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.service.RouteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,9 @@ public class RouteController {
     
     @PostMapping
     public ResponseEntity<RouteResponseDto>addRoute(
-            @Validated @RequestBody AddRouteRequestDto addRouteRequestDto){
+            @Validated @RequestBody RouteRequestDto routeRequestDto){
         
-        var createdRoute = routeService.addRoute(addRouteRequestDto);
+        var createdRoute = routeService.addRoute(routeRequestDto);
         
         return new ResponseEntity<>(createdRoute, HttpStatus.CREATED);
     }
@@ -40,10 +39,10 @@ public class RouteController {
     
     @PutMapping("{id}")
     public RouteResponseDto updateRoute(
-            @Validated @RequestBody UpdateRouteRequestDto updateRouteRequestDto,
+            @Validated @RequestBody RouteRequestDto routeRequestDto,
             @PathVariable("id") Long id) {
         
-        return routeService.updateRoute(updateRouteRequestDto, id);
+        return routeService.updateRoute(routeRequestDto, id);
     }
     
     @DeleteMapping("{id}")

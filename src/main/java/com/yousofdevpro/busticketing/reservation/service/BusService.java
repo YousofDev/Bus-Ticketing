@@ -1,9 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
-import com.yousofdevpro.busticketing.reservation.dto.AddBusRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.BusRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.UpdateBusRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Bus;
 import com.yousofdevpro.busticketing.reservation.repository.BusRepository;
 import lombok.AllArgsConstructor;
@@ -24,13 +23,13 @@ public class BusService {
     
     
     @Transactional
-    public BusResponseDto addBus(AddBusRequestDto addBusRequestDto) {
+    public BusResponseDto addBus(BusRequestDto busRequestDto) {
         
         var bus = Bus.builder()
-                .name(addBusRequestDto.getName())
-                .busNumber(addBusRequestDto.getBusNumber())
-                .totalSeats(addBusRequestDto.getTotalSeats())
-                .isActive(addBusRequestDto.getIsActive())
+                .name(busRequestDto.getName())
+                .busNumber(busRequestDto.getBusNumber())
+                .totalSeats(busRequestDto.getTotalSeats())
+                .isActive(busRequestDto.getIsActive())
                 .build();
         
         bus = busRepository.save(bus);
@@ -53,15 +52,15 @@ public class BusService {
     }
     
     @Transactional
-    public BusResponseDto updateBusById(UpdateBusRequestDto updateBusRequestDto, Long id) {
+    public BusResponseDto updateBusById(BusRequestDto busRequestDto, Long id) {
         var bus = busRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Bus not found"));
         
         bus.setId(id);
-        bus.setName(updateBusRequestDto.getName());
-        bus.setBusNumber(updateBusRequestDto.getBusNumber());
-        bus.setTotalSeats(updateBusRequestDto.getTotalSeats());
-        bus.setIsActive(updateBusRequestDto.getIsActive());
+        bus.setName(busRequestDto.getName());
+        bus.setBusNumber(busRequestDto.getBusNumber());
+        bus.setTotalSeats(busRequestDto.getTotalSeats());
+        bus.setIsActive(busRequestDto.getIsActive());
         
         bus = busRepository.save(bus);
         

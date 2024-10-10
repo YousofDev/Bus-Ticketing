@@ -4,6 +4,7 @@ import com.yousofdevpro.busticketing.auth.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,8 +24,27 @@ public class Appointment {
     private Long id;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "calendar_day", nullable = false)
+    @Column(nullable = false)
     private CalendarDay calendarDay;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ServiceGrade serviceGrade;
+    
+    @Column(nullable = false)
+    private BigDecimal price;
+    
+    @Column(nullable = false)
+    private LocalTime departureTime;
+    
+    @Column(nullable = false)
+    private LocalTime arrivalTime;
+    
+    @Column(nullable = false)
+    private LocalDate effectiveDate;
+    
+    @Column(nullable = true)
+    private LocalDate endDate;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_user_id", nullable = false)
@@ -40,20 +60,6 @@ public class Appointment {
     
     @OneToMany(mappedBy = "appointment")
     private List<Ticket> tickets;
-    
-    @OneToMany(mappedBy = "appointment")
-    private List<PricingRule> pricingRules;
-    
-    @Column(nullable = false)
-    private LocalTime departureTime;
-    
-    @Column(nullable = false)
-    private LocalTime arrivalTime;
-    
-    @Column(name = "effective_date", nullable = false)
-    private LocalDate effectiveDate;
-    
-    private LocalDate endDate;
     
     @Column(nullable = false, updatable = false)
     @Builder.Default

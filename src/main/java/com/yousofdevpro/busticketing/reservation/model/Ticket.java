@@ -7,6 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -41,10 +42,35 @@ public class Ticket {
     private TicketStatus status;
     
     @Column(nullable = false)
+    private LocalDate departureDate;
+    
+    // Must persist these live data permanently from: user, appointment models
+    // will preserve the ticket record from any future changes at the related models
+    // Consider it as a Real Data Snapshot for the PRINTED TICKET
+    
+    @Column(nullable = false)
     private BigDecimal price;
     
     @Column(nullable = false)
-    private LocalDate departureDate;
+    private String customerName;
+    
+    @Column(nullable = false)
+    private String customerPhone;
+    
+    @Column(nullable = false)
+    private String customerEmail;
+    
+    @Column(nullable = false)
+    private String departurePoint;
+    
+    @Column(nullable = false)
+    private String arrivalPoint;
+    
+    @Column(nullable = false)
+    private LocalTime departureTime;
+    
+    @Column(nullable = false)
+    private LocalTime arrivalTime;
     
     @Column(nullable = false, updatable = false)
     @Builder.Default

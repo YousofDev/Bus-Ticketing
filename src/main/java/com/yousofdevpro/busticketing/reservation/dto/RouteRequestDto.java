@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class AddRouteRequestDto {
+public class RouteRequestDto {
     
     @NotBlank(message = "Departure point is required")
     private String departurePoint;
