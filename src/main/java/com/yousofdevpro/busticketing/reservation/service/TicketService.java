@@ -5,9 +5,12 @@ import com.yousofdevpro.busticketing.config.exception.BadRequestException;
 import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
+import com.yousofdevpro.busticketing.reservation.model.Payment;
+import com.yousofdevpro.busticketing.reservation.model.PaymentStatus;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
 import com.yousofdevpro.busticketing.reservation.model.TicketStatus;
 import com.yousofdevpro.busticketing.reservation.repository.AppointmentRepository;
+import com.yousofdevpro.busticketing.reservation.repository.PaymentRepository;
 import com.yousofdevpro.busticketing.reservation.repository.TicketRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class TicketService {
     private final UserRepository userRepository;
     private final AppointmentRepository appointmentRepository;
     private final TicketRepository ticketRepository;
+    private final PaymentRepository paymentRepository;
     
     
     @Transactional
@@ -83,7 +87,16 @@ public class TicketService {
         ticket = ticketRepository.save(ticket);
         
         if (ticketRequestDto.getIsPaid()) {
-            // TODO: Create a completed payment
+            // Issue a completed payment
+            var payment = Payment.builder()
+                    .status(PaymentStatus.COMPLETED)
+                    .amount(ticket.getPrice())
+                    .ticket(ticket)
+                    .customer(customer)
+                    .description("Payment completed successfully")
+                    .build();
+            
+            paymentRepository.save(payment);
         }
         
         return TicketDetailsResponseDto.builder()

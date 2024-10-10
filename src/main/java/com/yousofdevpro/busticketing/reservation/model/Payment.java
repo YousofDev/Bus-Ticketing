@@ -20,10 +20,9 @@ public class Payment {
     @Id
     private Long id;
     
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus status;
     
     @Column(nullable = false)
     private BigDecimal amount;
@@ -35,9 +34,10 @@ public class Payment {
     @JoinColumn(name = "customer_user_id", nullable = false)
     private User customer;
     
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus status;
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
     
     @Column(nullable = false, updatable = false)
     @Builder.Default
