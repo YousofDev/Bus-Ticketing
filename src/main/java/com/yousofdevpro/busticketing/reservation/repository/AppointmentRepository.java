@@ -1,6 +1,7 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
 import com.yousofdevpro.busticketing.reservation.dto.AppointmentDetailsResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.AppointmentDto;
 import com.yousofdevpro.busticketing.reservation.model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "WHERE a.effectiveDate <= :date AND (a.endDate IS NULL OR a.endDate >= :date)")
     List<AppointmentDetailsResponseDto> findActiveAppointmentsDetails(@Param("date") LocalDate date);
     
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.AppointmentDto(" +
+            "a.id, a.calendarDay, a.serviceGrade, a.price, a.departureTime, a.arrivalTime, " +
+            "r.departurePoint, r.destinationPoint, " +
+            "b.busNumber, b.totalSeats, a.endDate) " +
+            "FROM Appointment a " +
+            "JOIN a.bus b " +
+            "JOIN a.route r " +
+            "WHERE a.id = :id")
+    Optional<AppointmentDto>findAppointmentById(@Param("id") Long id);
 }

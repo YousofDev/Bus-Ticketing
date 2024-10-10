@@ -22,55 +22,26 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_user_id", nullable = false)
-    private User customer;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id", nullable = false)
-    private Appointment appointment;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ServiceGrade serviceGrade;
-    
-    @Column(nullable = false)
-    private Integer seatNumber;
-    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TicketStatus status;
     
     @Column(nullable = false)
-    private LocalDate departureDate;
+    private Integer seatNumber;
     
-    // Must persist these live data permanently from: user, appointment models
-    // will preserve the ticket record from any future changes at the related models
-    // Consider it as a Real Data Snapshot for the PRINTED TICKET
+    @Column(nullable = false)
+    private LocalDate departureDate;
     
     @Column(nullable = false)
     private BigDecimal price;
     
-    @Column(nullable = false)
-    private String customerName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id", nullable = false)
+    private Appointment appointment;
     
-    @Column(nullable = false)
-    private String customerPhone;
-    
-    @Column(nullable = false)
-    private String customerEmail;
-    
-    @Column(nullable = false)
-    private String departurePoint;
-    
-    @Column(nullable = false)
-    private String arrivalPoint;
-    
-    @Column(nullable = false)
-    private LocalTime departureTime;
-    
-    @Column(nullable = false)
-    private LocalTime arrivalTime;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_user_id", nullable = false)
+    private User customer;
     
     @Column(nullable = false, updatable = false)
     @Builder.Default

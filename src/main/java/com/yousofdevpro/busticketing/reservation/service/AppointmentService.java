@@ -36,6 +36,17 @@ public class AppointmentService {
        -can't create an appointment for these cases:
         if there is another appointment with same bus and same departure time.
         or the arrival time for another bus appointment is after the new departure time
+        
+       -can't change an appointment if it has present or future tickets
+       -can't delete an appointment if it linked with any tickets
+       -when changing the appointment must choose present or future effective date
+       
+       >> What the flow of changing an appointment has present or future tickets:
+       --------------------------------------------------------------------------
+       1- Deactivate the current appointment by setting the end date to the today date
+       2- Create new Appointment with same previous appointment
+       3- Setting present or future effective date to the new appointment
+       4- convert the present or future tickets to the new appointment
        
     */
     
