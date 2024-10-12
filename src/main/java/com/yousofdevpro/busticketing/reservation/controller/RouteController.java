@@ -33,20 +33,20 @@ public class RouteController {
     }
     
     @GetMapping("{id}")
-    public RouteResponseDto getRoute(@PathVariable("id") Long id){
+    public RouteResponseDto getRoute(@PathVariable Long id){
         return routeService.getRouteById(id);
     }
     
     @PutMapping("{id}")
     public RouteResponseDto updateRoute(
             @Validated @RequestBody RouteRequestDto routeRequestDto,
-            @PathVariable("id") Long id) {
+            @PathVariable Long id) {
         
         return routeService.updateRoute(routeRequestDto, id);
     }
     
     @DeleteMapping("{id}")
-    public void deleteRoute(@PathVariable("id") Long id) {
+    public void deleteRoute(@PathVariable Long id) {
         routeService.deleteRouteById(id);
     }
     

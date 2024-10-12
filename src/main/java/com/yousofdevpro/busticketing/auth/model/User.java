@@ -1,7 +1,6 @@
 package com.yousofdevpro.busticketing.auth.model;
 
 import com.yousofdevpro.busticketing.reservation.model.Appointment;
-import com.yousofdevpro.busticketing.reservation.model.Payment;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -52,9 +49,6 @@ public class User implements UserDetails {
     
     @OneToMany(mappedBy = "customer")
     private List<Ticket> tickets;
-    
-    @OneToMany(mappedBy = "customer")
-    private List<Payment> payments;
     
     @Column(nullable = false)
     @Builder.Default

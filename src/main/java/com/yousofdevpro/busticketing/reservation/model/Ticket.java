@@ -26,6 +26,12 @@ public class Ticket {
     @Column(nullable = false)
     private TicketStatus status;
     
+    @Column(nullable = true)
+    private LocalDateTime paidOn;
+    
+    @Column(nullable = true)
+    private LocalDateTime canceledOn;
+    
     @Column(nullable = false)
     private Integer seatNumber;
     
