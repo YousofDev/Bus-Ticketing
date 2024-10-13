@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public class RouteRequestDto {
     
-    @NotBlank(message = "Departure point is required")
+    @NotBlank(message = "departurePoint is required")
     private String departurePoint;
     
-    @NotBlank(message = "Destination point is required")
+    @NotBlank(message = "destinationPoint is required")
     private String destinationPoint;
     
-    @NotNull(message = "Is active is required")
+    @NotNull(message = "isActive is required")
     private Boolean isActive;
     
     

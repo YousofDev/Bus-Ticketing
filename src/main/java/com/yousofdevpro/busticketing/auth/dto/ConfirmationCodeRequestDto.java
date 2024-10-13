@@ -5,12 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class LoginRequestDto {
+public class ConfirmationCodeRequestDto {
+    
+    @NotBlank(message = "code is required")
+    private String code;
     
     @NotBlank(message = "email is required")
     @Email(message = "email should be valid")
     private String email;
-    
-    @NotBlank(message = "password is required")
-    private String password;
 }

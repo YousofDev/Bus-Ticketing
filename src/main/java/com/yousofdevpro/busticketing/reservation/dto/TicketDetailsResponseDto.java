@@ -36,6 +36,8 @@ public class TicketDetailsResponseDto {
     private String customerPhone;
     private Long customerUserId;
     private Long appointmentId;
+    private LocalDateTime paidAt;
+    private LocalDateTime canceledAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

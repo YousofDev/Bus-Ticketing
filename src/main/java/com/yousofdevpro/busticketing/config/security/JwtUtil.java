@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.config.security;
 
-import com.yousofdevpro.busticketing.config.exception.InvalidJwtException;
+import com.yousofdevpro.busticketing.config.exception.AuthorizationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -46,7 +46,7 @@ public class JwtUtil {
         try{
             return extractClaim(token, Claims::getSubject);
         }catch (Exception e){
-            throw new InvalidJwtException("Invalid Bearer Token");
+            throw new AuthorizationException("Invalid Authorization Bearer");
         }
     }
     

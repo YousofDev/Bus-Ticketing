@@ -15,39 +15,39 @@ import java.time.LocalDate;
 @Getter
 public class AppointmentRequestDto {
     
-    @NotBlank(message = "Calendar day is required.")
-    @InEnum(value = CalendarDay.class, message = "Calendar day must be a value in: SATURDAY,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
+    @NotBlank(message = "calendarDay is required.")
+    @InEnum(value = CalendarDay.class, message = "calendarDay must be a value in: SATURDAY,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
     private String calendarDay;
     
-    @NotBlank(message = "Service grade is required")
-    @InEnum(value = ServiceGrade.class, message = "Service grade must be a value in: ECONOMY, BUSINESS, DELUXE")
+    @NotBlank(message = "serviceGrade is required")
+    @InEnum(value = ServiceGrade.class, message = "serviceGrade must be a value in: ECONOMY, BUSINESS, DELUXE")
     private String serviceGrade;
     
-    @NotNull(message = "Price is required")
+    @NotNull(message = "price is required")
     private BigDecimal price;
     
-    @NotBlank(message = "Departure time cannot be null")
-    @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "Departure time must be in HH:mm format")
+    @NotBlank(message = "departureTime is required")
+    @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "departureTime must be in HH:mm format")
     private String departureTime;
     
-    @NotBlank(message = "Arrival time cannot be null")
-    @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "Arrival time must be in HH:mm format")
+    @NotBlank(message = "arrivalTime is required")
+    @Pattern(regexp = "^([01]\\d|2[0-3]):([0-5]\\d)$", message = "arrivalTime must be in HH:mm format")
     private String arrivalTime;
     
-    @NotNull(message = "Effective date cannot be null")
-    @FutureOrPresent(message = "Effective date must be today or in the future")
+    @NotNull(message = "effectiveDate is required")
+    @FutureOrPresent(message = "effectiveDate must be today or in the future")
     private LocalDate effectiveDate;
     
-    @FutureOrPresent(message = "End date must be today or in the future if provided")
+    @FutureOrPresent(message = "endDate must be today or in the future if provided")
     private LocalDate endDate; // Optional
     
-    @NotNull(message = "Driver user id is required")
+    @NotNull(message = "driverUserId is required")
     private Long driverUserId;
     
-    @NotNull(message = "Bus id is required")
+    @NotNull(message = "busId is required")
     private Long busId;
     
-    @NotNull(message = "Route id is required")
+    @NotNull(message = "routeId is required")
     private Long routeId;
     
 }

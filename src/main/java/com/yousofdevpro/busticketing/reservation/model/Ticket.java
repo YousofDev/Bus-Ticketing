@@ -26,12 +26,6 @@ public class Ticket {
     @Column(nullable = false)
     private TicketStatus status;
     
-    @Column(nullable = true)
-    private LocalDateTime paidOn;
-    
-    @Column(nullable = true)
-    private LocalDateTime canceledOn;
-    
     @Column(nullable = false)
     private Integer seatNumber;
     
@@ -48,6 +42,12 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_user_id", nullable = false)
     private User customer;
+    
+    @Column(nullable = true)
+    private LocalDateTime paidAt;
+    
+    @Column(nullable = true)
+    private LocalDateTime canceledAt;
     
     @Column(nullable = false, updatable = false)
     @Builder.Default

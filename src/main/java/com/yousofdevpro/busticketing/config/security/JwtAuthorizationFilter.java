@@ -3,6 +3,7 @@ package com.yousofdevpro.busticketing.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yousofdevpro.busticketing.config.exception.AuthenticationException;
+import com.yousofdevpro.busticketing.config.exception.AuthorizationException;
 import com.yousofdevpro.busticketing.config.exception.ErrorDetails;
 import com.yousofdevpro.busticketing.config.exception.InvalidJwtException;
 import jakarta.servlet.FilterChain;
@@ -37,7 +38,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private static final Set<String> ALLOWED_URLS = new HashSet<>(
             Arrays.asList(
                     "/api/v1/auth/register",
-                    "/api/v1/auth/login"));
+                    "/api/v1/auth/confirm-account",
+                    "/api/v1/auth/login",
+                    "/api/v1/auth/reset-password",
+                    "/api/v1/auth/reset-password-confirm",
+                    "/api/v1/auth/send-confirmation-code",
+                    "/api/v1/auth/verify-confirmation-code"
+            ));
     
     @Override
     protected void doFilterInternal(
@@ -57,7 +64,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 writeException(
                         response,
                         HttpStatus.FORBIDDEN,
-                        "Authorization header missing or invalid"
+                        "Authorization Bearer missing"
                 );
                 return;
             } else {
@@ -90,7 +97,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             
         } catch (AuthenticationException e) {
             writeException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (InvalidJwtException e) {
+        } catch (AuthorizationException e) {
             writeException(response, HttpStatus.FORBIDDEN, e.getMessage());
         }
         

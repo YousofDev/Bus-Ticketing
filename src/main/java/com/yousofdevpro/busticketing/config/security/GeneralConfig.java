@@ -36,7 +36,7 @@ public class GeneralConfig {
             Optional<User> existedUser = userRepository.findByEmail(email);
             
             if (existedUser.isEmpty()) {
-                throw new AuthenticationException("Bad Credentials!!");
+                throw new AuthenticationException("Invalid Credentials!");
             }
             
             return existedUser.get();

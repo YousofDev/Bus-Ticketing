@@ -1,6 +1,9 @@
 package com.yousofdevpro.busticketing.reservation.dto;
 
+import com.yousofdevpro.busticketing.config.exception.InEnum;
+import com.yousofdevpro.busticketing.reservation.model.TicketStatus;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,19 +16,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TicketRequestDto {
     
-    @NotNull(message = "Seat number is required")
+    @NotBlank(message = "status is required")
+    @InEnum(value = TicketStatus.class, message = "status must be a value in: UNPAID, PAID, CANCELED")
+    private String status;
+    
+    @NotNull(message = "seatNumber is required")
     private Integer seatNumber;
     
-    @NotNull(message = "Departure date is required")
-    @FutureOrPresent(message = "Departure date must be today or in the future")
+    @NotNull(message = "departureDate is required")
+    @FutureOrPresent(message = "departureDate must be today or in the future")
     private LocalDate departureDate;
     
-    @NotNull(message = "Appointment id is required")
+    @NotNull(message = "appointmentId is required")
     private Long appointmentId;
     
-    @NotNull(message = "Customer user id required")
+    @NotNull(message = "customerUserId is required")
     private Long customerUserId;
-    
-    @NotNull(message = "isPaid can't be null")
-    private Boolean isPaid;
 }

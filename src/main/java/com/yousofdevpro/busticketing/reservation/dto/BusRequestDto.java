@@ -8,16 +8,16 @@ import lombok.Getter;
 @Getter
 public class BusRequestDto {
     
-    @NotBlank(message = "Bus name is required")
+    @NotBlank(message = "name is required")
     private String name;
     
-    @NotBlank(message = "Bus number is required")
+    @NotBlank(message = "busNumber is required")
     private String busNumber;
     
-    @NotNull(message = "Total seats cannot be null")
-    @Min(value = 1, message = "Total seats must be at least 1")
+    @NotNull(message = "totalSeats is required")
+    @Min(value = 1, message = "totalSeats must be at least 1")
     private Integer totalSeats;
     
-    @NotNull(message = "Is active is required")
+    @NotNull(message = "isActive is required")
     private Boolean isActive;
 }

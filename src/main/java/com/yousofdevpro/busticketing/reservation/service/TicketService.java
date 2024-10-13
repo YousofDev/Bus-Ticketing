@@ -86,17 +86,17 @@ public class TicketService {
             ticket = new Ticket();
         }
         
+        ticket.setStatus(TicketStatus.valueOf(ticketRequestDto.getStatus()));
         ticket.setPrice(appointmentDto.getPrice());
         ticket.setSeatNumber(ticketRequestDto.getSeatNumber());
         ticket.setDepartureDate(ticketRequestDto.getDepartureDate());
         ticket.setAppointment(appointment);
         ticket.setCustomer(customer);
         
-        if (ticketRequestDto.getIsPaid()) {
-            ticket.setStatus(TicketStatus.PAID);
-            ticket.setPaidOn(LocalDateTime.now());
-        } else {
-            ticket.setStatus(TicketStatus.UNPAID);
+        if (ticketRequestDto.getStatus().equals(TicketStatus.PAID.name())) {
+            ticket.setPaidAt(LocalDateTime.now());
+        } else if (ticketRequestDto.getStatus().equals(TicketStatus.CANCELED.name())){
+            ticket.setCanceledAt(LocalDateTime.now());
         }
         
         ticket = ticketRepository.save(ticket);
@@ -122,6 +122,8 @@ public class TicketService {
                 .customerPhone(customer.getPhone())
                 .customerUserId(customer.getId())
                 .appointmentId(appointment.getId())
+                .paidAt(ticket.getPaidAt())
+                .canceledAt(ticket.getCanceledAt())
                 .createdAt(ticket.getCreatedAt())
                 .updatedAt(ticket.getUpdatedAt())
                 .build();

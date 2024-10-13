@@ -30,7 +30,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(
                         "/api/v1/auth/register",
-                        "/api/v1/auth/login"
+                        "/api/v1/auth/confirm-account",
+                        "/api/v1/auth/login",
+                        "/api/v1/auth/reset-password",
+                        "/api/v1/auth/reset-password-confirm",
+                        "/api/v1/auth/send-confirmation-code",
+                        "/api/v1/auth/verify-confirmation-code"
                 )
                 .permitAll()
                 .requestMatchers("/api/v1/**").authenticated()

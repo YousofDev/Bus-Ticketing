@@ -28,19 +28,19 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     @Modifying
     @Transactional
-    @Query("UPDATE Ticket t SET t.status = 'CANCELED', t.canceledOn = :date WHERE t.id = :ticketId")
+    @Query("UPDATE Ticket t SET t.status = 'CANCELED', t.canceledAt = :date WHERE t.id = :ticketId")
     void cancelTicketById(Long ticketId, @Param("date") LocalDateTime date);
     
     @Modifying
     @Transactional
-    @Query("UPDATE Ticket t SET t.status = 'PAID', t.paidOn = :date WHERE t.id = :ticketId")
+    @Query("UPDATE Ticket t SET t.status = 'PAID', t.paidAt = :date WHERE t.id = :ticketId")
     void payTicketById(Long ticketId, @Param("date")LocalDateTime date);
     
     @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -53,7 +53,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) "+
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) "+
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -65,7 +65,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -78,7 +78,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -91,7 +91,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -104,7 +104,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -120,7 +120,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt) " +
+            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +

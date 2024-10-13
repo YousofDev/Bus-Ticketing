@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
     
     @Enumerated(EnumType.STRING)
@@ -50,9 +50,14 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "customer")
     private List<Ticket> tickets;
     
+    @Column(nullable = true)
+    private String otpCode;
+    
+    @Column(nullable = true)
+    private LocalDateTime otpCodeExpiresAt;
+    
     @Column(nullable = false)
-    @Builder.Default
-    private Boolean isConfirmed = true;
+    private Boolean isConfirmed;
     
     @Column(nullable = false)
     @Builder.Default
@@ -105,6 +110,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isConfirmed;
+    }
+    
+    public boolean isOtpNotValid(String code) {
+        return this.getOtpCode()==null ||
+                this.getOtpCodeExpiresAt().isBefore(LocalDateTime.now()) ||
+                !this.getOtpCode().equals(code);
     }
     
 }

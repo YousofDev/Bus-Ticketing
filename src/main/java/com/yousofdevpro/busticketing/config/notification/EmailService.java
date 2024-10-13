@@ -26,22 +26,16 @@ public class EmailService {
         emailSender.send(message);
     }
     
-    public void sendConfirmationLink(User user, String link) throws MessagingException {
-        String subject = "Confirm your account at Spring";
-        String htmlMessage = template.getHtmlConfirm(user, link);
+    public void sendConfirmationMessage(User user, String message) throws MessagingException {
+        String subject = "Get your confirmation code from BusTic";
+        String htmlMessage = template.getHtmlConfirmationMessage(user, message);
         this.sendEmail(user.getEmail(), subject, htmlMessage);
     }
     
-    public void sendResetPasswordLink(User user, String link) throws MessagingException {
-        String subject = "Reset your password at Spring";
-        String htmlMessage = template.getHtmlReset(user, link);
+    public void sendAlertMessage(User user, String message) throws MessagingException {
+        String subject = "Alert from BusTic";
+        String htmlMessage = template.getHtmlAlertMessage(user, message);
         this.sendEmail(user.getEmail(), subject, htmlMessage);
     }
     
-    public void sendOtpMessage(User user, String token) throws MessagingException {
-        String subject = "Get Verification Code";
-        String htmlMessage = template.getHtmlOtp(user, token);
-        this.sendEmail(user.getEmail(), subject, htmlMessage);
-        
-    }
 }
