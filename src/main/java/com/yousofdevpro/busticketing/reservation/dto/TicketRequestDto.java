@@ -1,10 +1,9 @@
 package com.yousofdevpro.busticketing.reservation.dto;
 
-import com.yousofdevpro.busticketing.core.exception.InEnum;
-import com.yousofdevpro.busticketing.reservation.model.TicketStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 public class TicketRequestDto {
     
     @NotBlank(message = "status is required")
-    @InEnum(value = TicketStatus.class, message = "status must be a value in: UNPAID, PAID, CANCELED")
+    @Pattern(regexp = "UNPAID|PAID|CANCELED", message = "status must be one of UNPAID, PAID, CANCELED")
     private String status;
     
     @NotNull(message = "seatNumber is required")

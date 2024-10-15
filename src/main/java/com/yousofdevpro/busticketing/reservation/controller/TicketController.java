@@ -53,7 +53,7 @@ public class TicketController {
     }
     
     @PatchMapping("/{id}/pay")
-    public ResponseEntity<?> payTicketById(@PathVariable Long id) {
+    public ResponseEntity<Void> payTicketById(@PathVariable Long id) {
         ticketService.payTicketById(id);
         return ResponseEntity.ok().build();
     }

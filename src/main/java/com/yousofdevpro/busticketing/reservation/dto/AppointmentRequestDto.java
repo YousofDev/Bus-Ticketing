@@ -1,8 +1,5 @@
 package com.yousofdevpro.busticketing.reservation.dto;
 
-import com.yousofdevpro.busticketing.core.exception.InEnum;
-import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
-import com.yousofdevpro.busticketing.reservation.model.ServiceGrade;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,11 +13,11 @@ import java.time.LocalDate;
 public class AppointmentRequestDto {
     
     @NotBlank(message = "calendarDay is required.")
-    @InEnum(value = CalendarDay.class, message = "calendarDay must be a value in: SATURDAY,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
+    @Pattern(regexp = "SATURDAY|SUNDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY", message = "calendarDay must be one of SATURDAY,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY")
     private String calendarDay;
     
     @NotBlank(message = "serviceGrade is required")
-    @InEnum(value = ServiceGrade.class, message = "serviceGrade must be a value in: ECONOMY, BUSINESS, DELUXE")
+    @Pattern(regexp = "ECONOMY|BUSINESS|DELUXE", message = "serviceGrade must be one of ECONOMY, BUSINESS, DELUXE")
     private String serviceGrade;
     
     @NotNull(message = "price is required")

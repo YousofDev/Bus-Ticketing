@@ -5,6 +5,8 @@ import com.yousofdevpro.busticketing.auth.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +32,10 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto>login(
+    public ResponseEntity<TokensResponseDto>login(
             @Validated @RequestBody LoginRequestDto loginRequestDto){
-        var loginResponse = authService.login(loginRequestDto);
-        return ResponseEntity.ok(loginResponse);
+        var tokens = authService.login(loginRequestDto);
+        return ResponseEntity.ok(tokens);
     }
     
     @PostMapping("/reset-password")
@@ -45,9 +47,9 @@ public class AuthController {
     
     @PostMapping("/reset-password-confirm")
     public ResponseEntity<MessageResponseDto> resetPasswordVerify(
-            @Validated @RequestBody ResetPasswordConfirmRequestDto resetPasswordConfirmDto) {
+            @Validated @RequestBody ResetPasswordConfirmRequestDto resetPasswordConfirmRequestDto) {
         var message = authService.resetPasswordConfirm(
-                resetPasswordConfirmDto);
+                resetPasswordConfirmRequestDto);
         return ResponseEntity.ok(message);
     }
     
@@ -64,6 +66,34 @@ public class AuthController {
         var message = authService.verifyConfirmationCode(
                 confirmationCodeRequestDto);
         return ResponseEntity.ok(message);
+    }
+    
+    @GetMapping("/profile")
+    public UserDtoResponse getUserProfile(
+            @AuthenticationPrincipal UserDetails userDetails){
+        return authService.getUserProfile(userDetails);
+    }
+    
+    @PutMapping("/profile")
+    public UserDtoResponse updateUserProfile(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Validated @RequestBody ProfileRequestDto profileRequestDto) {
+        return authService.updateUserProfile(userDetails, profileRequestDto);
+    }
+    
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        authService.changePassword(userDetails, changePasswordRequestDto);
+        return ResponseEntity.ok().build();
+    }
+    
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokensResponseDto> refreshToken(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var tokens = authService.refreshToken(userDetails);
+        return ResponseEntity.ok(tokens);
     }
     
 }

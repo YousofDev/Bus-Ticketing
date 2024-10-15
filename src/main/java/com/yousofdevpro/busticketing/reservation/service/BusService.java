@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
-import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.BusRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Bus;
@@ -50,13 +50,13 @@ public class BusService {
     
     public BusResponseDto getBusById(Long id) {
         return busRepository.fetchBusById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Bus not found"));
+                new NotFoundException("Bus not found"));
     }
     
     @Transactional
     public BusResponseDto updateBusById(BusRequestDto busRequestDto, Long id) {
         var bus = busRepository.findById(id).orElseThrow(()->
-                new ResourceNotFoundException("Bus not found"));
+                new NotFoundException("Bus not found"));
         
         bus.setId(id);
         bus.setName(busRequestDto.getName());

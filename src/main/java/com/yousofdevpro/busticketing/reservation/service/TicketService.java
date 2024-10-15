@@ -2,7 +2,7 @@ package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.BadRequestException;
-import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
@@ -43,7 +43,7 @@ public class TicketService {
         // 3- Get the appointment details
         var appointmentDto =
                 appointmentRepository.findAppointmentById(ticketRequestDto.getAppointmentId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+                        .orElseThrow(() -> new NotFoundException("Appointment not found"));
         
         // 4- Count the number of available tickets (seat numbers)
         int availableSeats = appointmentDto.getBusTotalSeats() - seatNumbers.size();
@@ -74,14 +74,14 @@ public class TicketService {
                 ticketRequestDto.getAppointmentId());
         
         var customer = userRepository.findById(ticketRequestDto.getCustomerUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+                .orElseThrow(() -> new NotFoundException("Customer not found"));
         
         // 7- Persist the ticket data
         Ticket ticket;
         
         if (ticketId!=null) {
             ticket = ticketRepository.findById(ticketId).orElseThrow(() ->
-                    new ResourceNotFoundException("Ticket not found!"));
+                    new NotFoundException("Ticket not found!"));
         } else {
             ticket = new Ticket();
         }
@@ -135,7 +135,7 @@ public class TicketService {
         var ticket = ticketRepository.getTicketById(id);
         
         if (ticket==null) {
-            throw new ResourceNotFoundException("Ticket not found");
+            throw new NotFoundException("Ticket not found");
         }
         
         return ticket;
@@ -169,7 +169,7 @@ public class TicketService {
     @Transactional
     public void payTicketById(Long id) {
         var ticket = ticketRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Ticket not found!"));
+                new NotFoundException("Ticket not found!"));
         
         if (ticket.getStatus().equals(TicketStatus.CANCELED)) {
             throw new BadRequestException("Can't pay a canceled ticket!");
@@ -187,7 +187,7 @@ public class TicketService {
     @Transactional
     public void cancelTicketById(Long id) {
         var ticket = ticketRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Ticket not found"));
+                new NotFoundException("Ticket not found"));
         
         if (ticket.getStatus().equals(TicketStatus.CANCELED)) {
             throw new BadRequestException("Ticket already canceled!");

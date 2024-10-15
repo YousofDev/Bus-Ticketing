@@ -6,7 +6,7 @@ import com.yousofdevpro.busticketing.auth.model.Role;
 import com.yousofdevpro.busticketing.auth.model.User;
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.ConflictException;
-import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,13 +47,13 @@ public class UserService {
     
     public UserDtoResponse getUserById(Long id) {
         return userRepository.findUserById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
     
     @Transactional
     public UserDtoResponse updateUserById(UserRequestDto userRequestDto, Long id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
         
         user.setFirstName(userRequestDto.getFirstName());
         if(!userRequestDto.getLastName().isEmpty()){
@@ -71,7 +71,7 @@ public class UserService {
                 .lastName(user.getLastName())
                 .phone(user.getPhone())
                 .email(user.getEmail())
-                .role(Role.valueOf(String.valueOf(user.getRole())))
+                .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .createdBy(user.getCreatedBy())

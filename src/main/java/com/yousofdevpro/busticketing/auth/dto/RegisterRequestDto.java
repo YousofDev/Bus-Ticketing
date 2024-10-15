@@ -1,9 +1,8 @@
 package com.yousofdevpro.busticketing.auth.dto;
 
-import com.yousofdevpro.busticketing.auth.model.Role;
-import com.yousofdevpro.busticketing.core.exception.InEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -31,6 +30,6 @@ public class RegisterRequestDto {
     private String passwordAgain;
     
     @NotBlank(message = "role is required.")
-    @InEnum(value = Role.class, message = "role must be a value in: CUSTOMER, ADMIN, STAFF, DRIVER")
+    @Pattern(regexp = "ADMIN|STAFF|DRIVER|CUSTOMER", message = "role must be one of ADMIN, STAFF, DRIVER, CUSTOMER")
     private String role;
 }

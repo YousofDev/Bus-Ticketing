@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
-import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.RouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Route;
@@ -46,7 +46,7 @@ public class RouteService {
     
     public RouteResponseDto getRouteById(Long id) {
         return routeRepository.fetchRouteById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Route not found"));
+                new NotFoundException("Route not found"));
     }
     
     
@@ -58,7 +58,7 @@ public class RouteService {
         // TODO: UPDATE ROUTE: if not linked with any appointments
         
         var route = routeRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Route not found"));
+                new NotFoundException("Route not found"));
         
         route.setDeparturePoint(routeRequestDto.getDeparturePoint());
         route.setDestinationPoint(routeRequestDto.getDestinationPoint());

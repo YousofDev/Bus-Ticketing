@@ -96,7 +96,7 @@ public class AppointmentService {
     
     // public AppointmentDetailsResponseDto getAppointmentById(Long id) {
     //     return appointmentRepository.findAppointmentDetailsById(id).orElseThrow(() ->
-    //             new ResourceNotFoundException("Appointment not found"));
+    //             new NotFoundException("Appointment not found"));
     // }
     
     

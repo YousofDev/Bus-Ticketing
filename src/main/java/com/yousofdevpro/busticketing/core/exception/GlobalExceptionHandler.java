@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorDetails> handleBusinessException(
-            BusinessException ex, WebRequest request) {
+            BusinessException ex) {
         
         ErrorDetails errorDetails = new ErrorDetails(
                 ex.getMessage(),
@@ -29,7 +31,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorDetails> handleBadCredentialsException(
-            BadCredentialsException ex, WebRequest request) {
+            BadCredentialsException ex) {
         
         ErrorDetails errorDetails = new ErrorDetails(
                 ex.getMessage(),
@@ -41,7 +43,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public ResponseEntity<ErrorDetails> handleInternalAuthenticationException(
-            InternalAuthenticationServiceException ex, WebRequest request) {
+            InternalAuthenticationServiceException ex) {
         
         ErrorDetails errorDetails = new ErrorDetails(
                 ex.getMessage(),
@@ -51,10 +53,34 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
     
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorDetails> handleNoHandlerFoundException(
+            NoHandlerFoundException ex) {
+        
+        ErrorDetails errorDetails = new ErrorDetails(
+                "The requested endpoint was not found",
+                HttpStatus.NOT_FOUND.value()
+        );
+        
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorDetails> handleNoHandlerFoundException(
+            NoResourceFoundException ex) {
+        
+        ErrorDetails errorDetails = new ErrorDetails(
+                "The requested endpoint was not found",
+                HttpStatus.NOT_FOUND.value()
+        );
+        
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDetails> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-            
+        
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -78,7 +104,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value()
         );
         
-        System.out.println("\nGlobalException: "+ex.getMessage());
+        System.out.println("\nGlobalException: " + ex.getMessage());
         
         return new ResponseEntity<>(
                 errorDetails, HttpStatus.INTERNAL_SERVER_ERROR

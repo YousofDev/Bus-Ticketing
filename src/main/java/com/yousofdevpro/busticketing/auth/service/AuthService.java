@@ -7,12 +7,13 @@ import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.AuthenticationException;
 import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
 import com.yousofdevpro.busticketing.core.exception.BadRequestException;
+import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import com.yousofdevpro.busticketing.core.notification.EmailService;
 import com.yousofdevpro.busticketing.core.security.JwtUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class AuthService {
         
         if (!registerRequestDto.getPassword().equals(
                 registerRequestDto.getPasswordAgain())) {
-            throw new BadRequestException("The two password fields should be the same!");
+            throw new BadRequestException("password and passwordAgain must match!");
         }
         
         String successMessage = "We've sent a confirmation code to " +
@@ -67,48 +68,37 @@ public class AuthService {
         
         user = userRepository.save(user);
         
-        user.setCreatedBy(user.getId());
-        user = userRepository.save(user);
-        
         sendConfirmationMessage(user, "Please, use this code to confirm your account");
         
         return new MessageResponseDto(successMessage);
     }
     
+    @Transactional
     public MessageResponseDto confirmAccount(ConfirmationCodeRequestDto confirmAccountDto) {
         
-        Optional<User> existUser = userRepository.findByEmail(confirmAccountDto.getEmail());
+        var user = userRepository.findByEmail(confirmAccountDto.getEmail())
+                .orElseThrow(() -> new AuthenticationException("Invalid confirmation code or email"));
         
-        User user = null;
-        boolean isOtpNotValid = true;
-        if (existUser.isPresent()) {
-            user = existUser.get();
-            isOtpNotValid = user.isOtpNotValid(confirmAccountDto.getCode());
-        }
-        
-        if (user==null || isOtpNotValid) {
+        if (user.isOtpNotValid(confirmAccountDto.getCode())) {
             throw new AuthenticationException("Invalid confirmation code or email");
         }
         
         user.setIsConfirmed(true);
         user.setOtpCode(null);
         user.setOtpCodeExpiresAt(null);
+        user.setCreatedBy(user.getId());
+        user.setUpdatedBy(user.getId());
         user = userRepository.save(user);
         
         return new MessageResponseDto("Your account has been confirmed successfully");
     }
     
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+    public TokensResponseDto login(LoginRequestDto loginRequestDto) {
         
-        Optional<User> existUser = userRepository.findByEmail(loginRequestDto.getEmail());
+        var user = userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(() -> new AuthenticationException("Invalid password or email"));
         
-        User user = null;
-        if (existUser.isPresent()) {
-            user = existUser.get();
-        }
-        
-        if (user==null || !passwordEncoder.matches(
-                loginRequestDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new AuthenticationException("Invalid password or email");
         }
         
@@ -116,25 +106,22 @@ public class AuthService {
             user.setOtpCode(generateOtpCode());
             user.setOtpCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
             user = userRepository.save(user);
-            sendConfirmationMessage(user , "Please, use this code to confirm your account");
+            sendConfirmationMessage(user, "Please, use this code to confirm your account");
             throw new AuthenticationException(
                     "Your account is not verified, we've sent a confirmation email");
         }
         
-        if (!user.getIsActive()){
+        if (!user.getIsActive()) {
             throw new AuthorizationException("Your account has been suspended");
         }
         
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getEmail(), loginRequestDto.getPassword())
-        );
+        String accessToken = jwtUtil.generateAccessToken(loginRequestDto.getEmail());
+        String refreshToken = jwtUtil.generateRefreshToken(loginRequestDto.getEmail());
         
-        String accessToken = jwtUtil.generateToken(loginRequestDto.getEmail());
-        
-        return new LoginResponseDto(accessToken);
+        return new TokensResponseDto(accessToken, refreshToken);
     }
     
+    @Transactional
     public MessageResponseDto resetPassword(EmailRequestDto emailRequestDto) {
         String successMessage = "We've sent a confirmation code to " +
                 emailRequestDto.getEmail() +
@@ -142,7 +129,7 @@ public class AuthService {
         
         Optional<User> existUser = userRepository.findByEmail(emailRequestDto.getEmail());
         
-        if(existUser.isEmpty()){
+        if (existUser.isEmpty()) {
             return new MessageResponseDto(successMessage);
         }
         
@@ -156,24 +143,19 @@ public class AuthService {
         return new MessageResponseDto(successMessage);
     }
     
+    @Transactional
     public MessageResponseDto resetPasswordConfirm(
-            ResetPasswordConfirmRequestDto resetPasswordDto){
+            ResetPasswordConfirmRequestDto resetPasswordDto) {
         
         if (!resetPasswordDto.getPassword().equals(
                 resetPasswordDto.getPasswordAgain())) {
-            throw new BadRequestException("The two password fields should be the same!");
+            throw new BadRequestException("password and passwordAgain must match!");
         }
         
-        Optional<User> existUser = userRepository.findByEmail(resetPasswordDto.getEmail());
+        var user = userRepository.findByEmail(resetPasswordDto.getEmail())
+                .orElseThrow(() -> new AuthenticationException("Invalid confirmation code or email"));
         
-        User user = null;
-        boolean isOtpNotValid = true;
-        if (existUser.isPresent()) {
-            user = existUser.get();
-            isOtpNotValid = user.isOtpNotValid(resetPasswordDto.getCode());
-        }
-        
-        if (user==null || isOtpNotValid) {
+        if (user.isOtpNotValid(resetPasswordDto.getCode())) {
             throw new AuthenticationException("Invalid confirmation code or email");
         }
         
@@ -185,6 +167,7 @@ public class AuthService {
         return new MessageResponseDto("Your password has been changed successfully");
     }
     
+    @Transactional
     public MessageResponseDto sendConfirmationCode(EmailRequestDto emailRequestDto) {
         String successMessage = "We've sent a confirmation code to " +
                 emailRequestDto.getEmail();
@@ -205,18 +188,13 @@ public class AuthService {
         return new MessageResponseDto(successMessage);
     }
     
+    @Transactional
     public MessageResponseDto verifyConfirmationCode(ConfirmationCodeRequestDto confirmAccountDto) {
         
-        Optional<User> existUser = userRepository.findByEmail(confirmAccountDto.getEmail());
+        var user = userRepository.findByEmail(confirmAccountDto.getEmail())
+                .orElseThrow(() -> new AuthenticationException("Invalid confirmation code or email"));
         
-        User user = null;
-        boolean isOtpNotValid = true;
-        if (existUser.isPresent()) {
-            user = existUser.get();
-            isOtpNotValid = user.isOtpNotValid(confirmAccountDto.getCode());
-        }
-        
-        if (user==null || isOtpNotValid) {
+        if (user.isOtpNotValid(confirmAccountDto.getCode())) {
             throw new AuthenticationException("Invalid confirmation code or email");
         }
         
@@ -225,6 +203,73 @@ public class AuthService {
         user = userRepository.save(user);
         
         return new MessageResponseDto("Confirmation code verified successfully");
+    }
+    
+    public UserDtoResponse getUserProfile(UserDetails userDetails) {
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("Can't get user profile"));
+        return mapToUserDtoResponse(user);
+    }
+    
+    @Transactional
+    public UserDtoResponse updateUserProfile(
+            UserDetails userDetails, ProfileRequestDto profileRequestDto) {
+        
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("Can't get user profile"));
+        
+        user.setFirstName(profileRequestDto.getFirstName());
+        user.setLastName(profileRequestDto.getLastName());
+        user.setPhone(profileRequestDto.getPhone());
+        user.setEmail(profileRequestDto.getEmail());
+        user.setRole(Role.valueOf(profileRequestDto.getRole()));
+        
+        user = userRepository.save(user);
+        
+        return mapToUserDtoResponse(user);
+    }
+    
+    @Transactional
+    public void changePassword(UserDetails userDetails,
+                               ChangePasswordRequestDto changePasswordRequestDto) {
+        
+        if (!changePasswordRequestDto.getPassword().equals(
+                changePasswordRequestDto.getPasswordAgain())) {
+            throw new BadRequestException("password and password again must match!");
+        }
+        
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("Can't get user"));
+        
+        if (!passwordEncoder.matches(
+                changePasswordRequestDto.getCurrentPassword(),
+                user.getPassword())) {
+            throw new AuthenticationException("current password is wrong!");
+        }
+        
+        user.setPassword(passwordEncoder.encode(changePasswordRequestDto.getPassword()));
+        userRepository.save(user);
+    }
+    
+    public TokensResponseDto refreshToken(UserDetails userDetails) {
+        String accessToken = jwtUtil.generateAccessToken(userDetails.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
+        return new TokensResponseDto(accessToken, refreshToken);
+    }
+    
+    private UserDtoResponse mapToUserDtoResponse(User user) {
+        return UserDtoResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .createdBy(user.getCreatedBy())
+                .updatedBy(user.getUpdatedBy())
+                .build();
     }
     
     private void sendConfirmationMessage(User user, String message) {
@@ -249,4 +294,5 @@ public class AuthService {
         System.out.println("\nConfirmationCode: " + code);
         return String.valueOf(code);
     }
+    
 }

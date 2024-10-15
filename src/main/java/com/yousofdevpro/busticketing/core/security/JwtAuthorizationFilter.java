@@ -81,7 +81,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 
-                if (jwtUtil.validateToken(jwt, userDetails)) {
+                if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -99,7 +99,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         } catch (AuthorizationException e) {
             writeException(response, HttpStatus.FORBIDDEN, e.getMessage());
         }
-        
     }
     
     private void writeException(
