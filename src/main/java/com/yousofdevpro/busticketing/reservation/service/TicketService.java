@@ -1,8 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;
-import com.yousofdevpro.busticketing.config.exception.BadRequestException;
-import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.BadRequestException;
+import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
@@ -126,6 +126,8 @@ public class TicketService {
                 .canceledAt(ticket.getCanceledAt())
                 .createdAt(ticket.getCreatedAt())
                 .updatedAt(ticket.getUpdatedAt())
+                .createdBy(ticket.getCreatedBy())
+                .updatedBy(ticket.getUpdatedBy())
                 .build();
     }
     

@@ -4,11 +4,11 @@ import com.yousofdevpro.busticketing.auth.dto.*;
 import com.yousofdevpro.busticketing.auth.model.Role;
 import com.yousofdevpro.busticketing.auth.model.User;
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;
-import com.yousofdevpro.busticketing.config.exception.AuthenticationException;
-import com.yousofdevpro.busticketing.config.exception.AuthorizationException;
-import com.yousofdevpro.busticketing.config.exception.BadRequestException;
-import com.yousofdevpro.busticketing.config.notification.EmailService;
-import com.yousofdevpro.busticketing.config.security.JwtUtil;
+import com.yousofdevpro.busticketing.core.exception.AuthenticationException;
+import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
+import com.yousofdevpro.busticketing.core.exception.BadRequestException;
+import com.yousofdevpro.busticketing.core.notification.EmailService;
+import com.yousofdevpro.busticketing.core.security.JwtUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -67,6 +67,9 @@ public class AuthService {
         
         user = userRepository.save(user);
         
+        user.setCreatedBy(user.getId());
+        user = userRepository.save(user);
+        
         sendConfirmationMessage(user, "Please, use this code to confirm your account");
         
         return new MessageResponseDto(successMessage);
@@ -84,11 +87,12 @@ public class AuthService {
         }
         
         if (user==null || isOtpNotValid) {
-            throw new AuthenticationException("Invalid email or confirmation code");
+            throw new AuthenticationException("Invalid confirmation code or email");
         }
         
         user.setIsConfirmed(true);
         user.setOtpCode(null);
+        user.setOtpCodeExpiresAt(null);
         user = userRepository.save(user);
         
         return new MessageResponseDto("Your account has been confirmed successfully");
@@ -114,7 +118,7 @@ public class AuthService {
             user = userRepository.save(user);
             sendConfirmationMessage(user , "Please, use this code to confirm your account");
             throw new AuthenticationException(
-                    "Your account not verified, we've sent a confirmation email");
+                    "Your account is not verified, we've sent a confirmation email");
         }
         
         if (!user.getIsActive()){
@@ -170,11 +174,12 @@ public class AuthService {
         }
         
         if (user==null || isOtpNotValid) {
-            throw new AuthenticationException("Invalid email or confirmation code");
+            throw new AuthenticationException("Invalid confirmation code or email");
         }
         
         user.setPassword(passwordEncoder.encode(resetPasswordDto.getPassword()));
         user.setOtpCode(null);
+        user.setOtpCodeExpiresAt(null);
         user = userRepository.save(user);
         
         return new MessageResponseDto("Your password has been changed successfully");
@@ -212,10 +217,11 @@ public class AuthService {
         }
         
         if (user==null || isOtpNotValid) {
-            throw new AuthenticationException("Invalid email or confirmation code");
+            throw new AuthenticationException("Invalid confirmation code or email");
         }
         
         user.setOtpCode(null);
+        user.setOtpCodeExpiresAt(null);
         user = userRepository.save(user);
         
         return new MessageResponseDto("Confirmation code verified successfully");

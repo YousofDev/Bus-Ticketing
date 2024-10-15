@@ -36,4 +36,6 @@ public class AppointmentDetailsResponseDto {
     private LocalDate endDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long createdBy;
+    private Long updatedBy;
 }

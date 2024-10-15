@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
-import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.RouteRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Route;
@@ -39,6 +39,8 @@ public class RouteService {
                 .isActive(route.getIsActive())
                 .createdAt(route.getCreatedAt())
                 .updatedAt(route.getUpdatedAt())
+                .createdBy(route.getCreatedBy())
+                .updatedBy(route.getUpdatedBy())
                 .build();
     }
     
@@ -71,6 +73,8 @@ public class RouteService {
                 .isActive(route.getIsActive())
                 .createdAt(route.getCreatedAt())
                 .updatedAt(route.getUpdatedAt())
+                .createdBy(route.getCreatedBy())
+                .updatedBy(route.getUpdatedBy())
                 .build();
     }
     

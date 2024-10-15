@@ -4,6 +4,11 @@ import com.yousofdevpro.busticketing.reservation.model.Appointment;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     
     @Id
@@ -63,19 +69,20 @@ public class User implements UserDetails {
     @Builder.Default
     private Boolean isActive = true;
     
+    @CreatedDate
     @Column(nullable = false, updatable = false)
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     
-    @Column(nullable = false)
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime updatedAt;
     
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @CreatedBy
+    private Long createdBy;
     
+    @LastModifiedBy
+    @Column(insertable = false)
+    private Long updatedBy;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -113,6 +120,12 @@ public class User implements UserDetails {
     }
     
     public boolean isOtpNotValid(String code) {
+        // Check if otpCode has been used (set to null)
+        if (this.getOtpCode()==null && this.getOtpCodeExpiresAt()==null) {
+            return true; // OTP not valid as it has already been used
+        }
+        
+        // Check if otpCode is null or expired or does not match
         return this.getOtpCode()==null ||
                 this.getOtpCodeExpiresAt().isBefore(LocalDateTime.now()) ||
                 !this.getOtpCode().equals(code);

@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.config.notification;
+package com.yousofdevpro.busticketing.core.notification;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,11 +1,10 @@
-package com.yousofdevpro.busticketing.config.security;
+package com.yousofdevpro.busticketing.core.security;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yousofdevpro.busticketing.config.exception.AuthenticationException;
-import com.yousofdevpro.busticketing.config.exception.AuthorizationException;
-import com.yousofdevpro.busticketing.config.exception.ErrorDetails;
-import com.yousofdevpro.busticketing.config.exception.InvalidJwtException;
+import com.yousofdevpro.busticketing.core.exception.AuthenticationException;
+import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
+import com.yousofdevpro.busticketing.core.exception.ErrorDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

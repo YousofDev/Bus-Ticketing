@@ -16,13 +16,15 @@ import java.util.Optional;
 public interface BusRepository extends JpaRepository<Bus, Long> {
     
     @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.BusResponseDto(" +
-            "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, b.createdAt, b.updatedAt) " +
+            "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, " +
+            "b.createdAt, b.updatedAt, b.createdBy, b.updatedBy) " +
             "FROM Bus b")
     List<BusResponseDto> fetchBuses();
     
     
     @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.BusResponseDto(" +
-            "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, b.createdAt, b.updatedAt) " +
+            "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, " +
+            "b.createdAt, b.updatedAt, b.createdBy, b.updatedBy) " +
             "FROM Bus b WHERE b.id = :id")
     Optional<BusResponseDto> fetchBusById(@Param("id") Long id);
 }

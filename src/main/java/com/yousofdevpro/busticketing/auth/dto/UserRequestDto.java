@@ -4,11 +4,10 @@ import com.yousofdevpro.busticketing.auth.model.Role;
 import com.yousofdevpro.busticketing.core.exception.InEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class RegisterRequestDto {
+public class UserRequestDto {
     
     @NotBlank(message = "firstName is required")
     private String firstName;
@@ -21,14 +20,6 @@ public class RegisterRequestDto {
     @NotBlank(message = "email is required")
     @Email(message = "email should be valid")
     private String email;
-    
-    @NotBlank(message = "password is required")
-    @Size(min = 6, message = "password must be at least 6 characters long")
-    private String password;
-    
-    @NotBlank(message = "passwordAgain is required")
-    @Size(min = 6, message = "password must be at least 6 characters long")
-    private String passwordAgain;
     
     @NotBlank(message = "role is required.")
     @InEnum(value = Role.class, message = "role must be a value in: CUSTOMER, ADMIN, STAFF, DRIVER")

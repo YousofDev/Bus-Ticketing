@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
-import com.yousofdevpro.busticketing.config.exception.ResourceNotFoundException;
+import com.yousofdevpro.busticketing.core.exception.ResourceNotFoundException;
 import com.yousofdevpro.busticketing.reservation.dto.BusRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Bus;
@@ -42,6 +42,8 @@ public class BusService {
                 .isActive(bus.getIsActive())
                 .createdAt(bus.getCreatedAt())
                 .updatedAt(bus.getUpdatedAt())
+                .createdBy(bus.getCreatedBy())
+                .updatedBy(bus.getUpdatedBy())
                 .build();
     }
     
@@ -72,6 +74,8 @@ public class BusService {
                 .isActive(bus.getIsActive())
                 .createdAt(bus.getCreatedAt())
                 .updatedAt(bus.getUpdatedAt())
+                .createdBy(bus.getCreatedBy())
+                .updatedBy(bus.getUpdatedBy())
                 .build();
     }
     

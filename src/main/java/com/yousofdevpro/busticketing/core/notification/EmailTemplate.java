@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.config.notification;
+package com.yousofdevpro.busticketing.core.notification;
 
 import com.yousofdevpro.busticketing.auth.model.User;
 import org.springframework.stereotype.Component;

@@ -1,27 +1,26 @@
 package com.yousofdevpro.busticketing.reservation.model;
 
 import com.yousofdevpro.busticketing.auth.model.User;
+import com.yousofdevpro.busticketing.core.app.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "appointment")
-public class Appointment {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EntityListeners(AuditingEntityListener.class)
+public class Appointment extends BaseEntity {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -60,17 +59,4 @@ public class Appointment {
     
     @OneToMany(mappedBy = "appointment")
     private List<Ticket> tickets;
-    
-    @Column(nullable = false, updatable = false)
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-    
-    @Column(nullable = false)
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

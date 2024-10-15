@@ -1,5 +1,6 @@
-package com.yousofdevpro.busticketing.reservation.dto;
+package com.yousofdevpro.busticketing.auth.dto;
 
+import com.yousofdevpro.busticketing.auth.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,16 +8,17 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
-public class BusResponseDto {
+public class UserDtoResponse {
     private Long id;
-    private String busNumber;
-    private String name;
-    private Integer totalSeats;
-    private Boolean isActive;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long createdBy;

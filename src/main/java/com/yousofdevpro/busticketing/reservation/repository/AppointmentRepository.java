@@ -21,7 +21,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "a.id, a.calendarDay, a.serviceGrade, a.price, a.departureTime, a.arrivalTime, r.id, "+
             "r.departurePoint, r.destinationPoint, d.id, d.firstName, d.lastName, d.email, d.phone, "+
             "b.id, b.name, b.busNumber, b.totalSeats, "+
-            "a.effectiveDate, a.endDate, a.createdAt, a.updatedAt) " +
+            "a.effectiveDate, a.endDate, a.createdAt, a.updatedAt, a.createdBy, a.updatedBy) " +
             "FROM Appointment a " +
             "JOIN a.bus b " +
             "JOIN a.route r " +

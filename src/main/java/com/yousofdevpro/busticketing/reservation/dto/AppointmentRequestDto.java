@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.dto;
 
-import com.yousofdevpro.busticketing.config.exception.InEnum;
+import com.yousofdevpro.busticketing.core.exception.InEnum;
 import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
 import com.yousofdevpro.busticketing.reservation.model.ServiceGrade;
 import jakarta.validation.constraints.FutureOrPresent;

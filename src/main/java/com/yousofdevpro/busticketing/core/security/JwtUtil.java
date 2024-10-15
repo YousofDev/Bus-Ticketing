@@ -1,6 +1,6 @@
-package com.yousofdevpro.busticketing.config.security;
+package com.yousofdevpro.busticketing.core.security;
 
-import com.yousofdevpro.busticketing.config.exception.AuthorizationException;
+import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

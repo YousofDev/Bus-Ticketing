@@ -1,10 +1,8 @@
-package com.yousofdevpro.busticketing.config.exception;
+package com.yousofdevpro.busticketing.core.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

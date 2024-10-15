@@ -1,6 +1,5 @@
-package com.yousofdevpro.busticketing.config.security;
+package com.yousofdevpro.busticketing.core.security;
 
-import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +17,10 @@ public class SecurityConfig {
     
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     
-    
     @Bean
-    SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
         
@@ -46,7 +43,6 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(c->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-                
         
         return http.build();
     }

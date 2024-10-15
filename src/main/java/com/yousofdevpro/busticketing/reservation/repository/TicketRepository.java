@@ -40,7 +40,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -53,7 +53,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) "+
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -65,7 +65,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -78,7 +78,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -91,7 +91,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -104,7 +104,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +
@@ -120,7 +120,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
-            "t.createdAt, t.updatedAt, t.paidAt, t.canceledAt) " +
+            "t.paidAt, t.canceledAt, t.createdAt, t.updatedAt, t.createdBy, t.updatedBy) " +
             "FROM Ticket t " +
             "JOIN t.customer c " +
             "JOIN t.appointment a " +

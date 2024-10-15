@@ -1,23 +1,22 @@
 package com.yousofdevpro.busticketing.reservation.model;
 
+import com.yousofdevpro.busticketing.core.app.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "route")
-public class Route {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EntityListeners(AuditingEntityListener.class)
+public class Route extends BaseEntity{
     
     @Column(nullable = false)
     private String departurePoint;
@@ -27,21 +26,4 @@ public class Route {
     
     @OneToMany(mappedBy = "route")
     private List<Appointment> appointments;
-    
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
-    
-    @Column(nullable = false, updatable = false)
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-    
-    @Column(nullable = false)
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

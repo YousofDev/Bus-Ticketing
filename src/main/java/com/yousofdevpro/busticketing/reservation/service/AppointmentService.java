@@ -89,6 +89,8 @@ public class AppointmentService {
                 .endDate(appointment.getEndDate())
                 .createdAt(appointment.getCreatedAt())
                 .updatedAt(appointment.getUpdatedAt())
+                .createdBy(appointment.getCreatedBy())
+                .updatedBy(appointment.getUpdatedBy())
                 .build();
     }
     

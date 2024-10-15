@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.config.notification;
+package com.yousofdevpro.busticketing.core.notification;
 
 import com.yousofdevpro.busticketing.auth.model.User;
 import jakarta.mail.MessagingException;
@@ -27,7 +27,7 @@ public class EmailService {
     }
     
     public void sendConfirmationMessage(User user, String message) throws MessagingException {
-        String subject = "Get your confirmation code from BusTic";
+        String subject = "Confirmation code from BusTic";
         String htmlMessage = template.getHtmlConfirmationMessage(user, message);
         this.sendEmail(user.getEmail(), subject, htmlMessage);
     }

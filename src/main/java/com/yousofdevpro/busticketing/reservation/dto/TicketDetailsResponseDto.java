@@ -40,4 +40,6 @@ public class TicketDetailsResponseDto {
     private LocalDateTime canceledAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long createdBy;
+    private Long updatedBy;
 }

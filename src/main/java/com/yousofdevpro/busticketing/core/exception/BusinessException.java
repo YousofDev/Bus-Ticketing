@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.config.exception;
+package com.yousofdevpro.busticketing.core.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
