@@ -2,18 +2,21 @@ package com.yousofdevpro.busticketing.reservation.dto;
 
 import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
 import com.yousofdevpro.busticketing.reservation.model.ServiceGrade;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AppointmentDetailsResponseDto {
+@NoArgsConstructor
+public class AppointmentSeatsResponseDto {
     private Long id;
     private CalendarDay calendarDay;
     private ServiceGrade serviceGrade;
@@ -32,6 +35,7 @@ public class AppointmentDetailsResponseDto {
     private String busName;
     private String busNumber;
     private Integer busTotalSeats;
+    private Integer busAvailableSeats;
     private LocalDate effectiveDate;
     private LocalDate endDate;
     private LocalDateTime createdAt;

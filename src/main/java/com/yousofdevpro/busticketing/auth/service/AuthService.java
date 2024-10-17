@@ -21,10 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    
+    private final static Logger logger = Logger.getLogger(AuthService.class.getName());
     
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -273,10 +276,11 @@ public class AuthService {
     }
     
     private void sendConfirmationMessage(User user, String message) {
+        logger.info("\nConfirmationCode: " + user.getOtpCode());
         try {
             emailService.sendConfirmationMessage(user, message);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            logger.warning(e.getLocalizedMessage());
         }
     }
     
@@ -284,14 +288,14 @@ public class AuthService {
         try {
             emailService.sendAlertMessage(user, message);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            logger.warning(e.getLocalizedMessage());
         }
     }
     
     private String generateOtpCode() {
         Random random = new Random();
         int code = random.nextInt(900000) + 100000;
-        System.out.println("\nConfirmationCode: " + code);
+        logger.info("\nConfirmationCode: " + code);
         return String.valueOf(code);
     }
     

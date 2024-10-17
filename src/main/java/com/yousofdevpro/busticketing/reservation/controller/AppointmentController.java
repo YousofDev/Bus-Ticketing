@@ -1,8 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.controller;
 
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.AppointmentRequestDto;
 import com.yousofdevpro.busticketing.reservation.dto.AppointmentResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.AppointmentSeatsResponseDto;
 import com.yousofdevpro.busticketing.reservation.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,23 +20,36 @@ public class AppointmentController {
     
     private final AppointmentService appointmentService;
     
+    @GetMapping
+    public List<AppointmentSeatsResponseDto> getActiveAppointmentsWithSeats() {
+        return appointmentService.getActiveAppointmentsWithAvailableSeats(LocalDate.now());
+    }
+    
     @PostMapping
-    public ResponseEntity<AppointmentResponseDto> addAppointment(@Validated @RequestBody AppointmentRequestDto appointmentRequestDto) {
+    public ResponseEntity<AppointmentResponseDto> createAppointment(
+            @Validated @RequestBody AppointmentRequestDto appointmentRequestDto) {
         
-        var createdAppointment = appointmentService.addAppointment(appointmentRequestDto);
+        var createdAppointment =
+                appointmentService.createAppointment(appointmentRequestDto);
         
         return new ResponseEntity<>(createdAppointment, HttpStatus.CREATED);
     }
     
-    
-    @GetMapping
-    public List<AppointmentDetailsResponseDto> getActiveAppointmentsDetails() {
-        return appointmentService.getActiveAppointmentsDetails(LocalDate.now());
+    @PutMapping("/{id}")
+    public ResponseEntity<AppointmentResponseDto> updateAppointment(
+            @PathVariable("id") Long id,
+            @Validated @RequestBody AppointmentRequestDto appointmentRequestDto) {
+        
+        var updatedAppointment =
+                appointmentService.updateAppointmentById(id, appointmentRequestDto);
+        
+        return ResponseEntity.ok(updatedAppointment);
     }
     
-    // @GetMapping("/{id}")
-    // public AppointmentDetailsResponseDto getAppointmentDetails(@PathVariable("id") Long id) {
-    //     return appointmentService.getAppointmentDetails(id);
-    // }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable("id") Long id) {
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.noContent().build();
+    }
     
 }

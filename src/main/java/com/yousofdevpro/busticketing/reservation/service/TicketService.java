@@ -3,12 +3,15 @@ package com.yousofdevpro.busticketing.reservation.service;
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.BadRequestException;
 import com.yousofdevpro.busticketing.core.exception.NotFoundException;
+import com.yousofdevpro.busticketing.core.notification.EmailService;
+import com.yousofdevpro.busticketing.reservation.dto.AppointmentSimpleDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
 import com.yousofdevpro.busticketing.reservation.model.TicketStatus;
 import com.yousofdevpro.busticketing.reservation.repository.AppointmentRepository;
 import com.yousofdevpro.busticketing.reservation.repository.TicketRepository;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,92 +20,131 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class TicketService {
     
+    private final static Logger logger = Logger.getLogger(TicketService.class.getName());
+    
     private final UserRepository userRepository;
     private final AppointmentRepository appointmentRepository;
     private final TicketRepository ticketRepository;
+    private final EmailService emailService;
     
     @Transactional
-    public TicketDetailsResponseDto saveTicket(
-            TicketRequestDto ticketRequestDto, Long ticketId) {
+    public TicketDetailsResponseDto saveTicket(TicketRequestDto ticketRequestDto, Long ticketId) {
         
-        // 1 - Fetch all seat numbers for the given appointment and date
-        List<Integer> seatNumbers = ticketRepository.findReservedSeatNumbers(
+        // 1. Get appointment details
+        AppointmentSimpleDto appointmentDto =
+                getAppointmentDetails(ticketRequestDto.getAppointmentId());
+        
+        // 2. Check ticket availability
+        checkSeatAndTicketAvailability(appointmentDto, ticketRequestDto);
+        
+        // 3. Validate departure time and appointment active status
+        validateDepartureTimeAndAppointmentStatus(appointmentDto, ticketRequestDto.getDepartureDate());
+        
+        // 4. Get or create ticket
+        Ticket ticket = getOrCreateTicket(ticketId);
+        
+        // 5. Update ticket details
+        updateTicketDetails(ticket, ticketRequestDto, appointmentDto);
+        
+        // 6. Save ticket
+        ticket = ticketRepository.save(ticket);
+        
+        // 7. Create ticket details response
+        TicketDetailsResponseDto ticketDetails =
+                createTicketDetailsResponse(ticket, appointmentDto);
+        
+        // 8. Send email notification
+        sendTicketMessage(ticketDetails);
+        
+        return ticketDetails;
+    }
+    
+    private void checkSeatAndTicketAvailability(
+            AppointmentSimpleDto appointmentDto, TicketRequestDto ticketRequestDto) {
+        List<Integer> reservedSeatNumbers = ticketRepository.findReservedSeatNumbers(
                 ticketRequestDto.getAppointmentId(),
                 ticketRequestDto.getDepartureDate());
         
-        // 2- Check if the specified seat number exists in the list
-        if (seatNumbers.contains(ticketRequestDto.getSeatNumber())) {
-            throw new BadRequestException("Seat number already taken!");
+        // Check if the requested seat is already taken
+        if (reservedSeatNumbers.contains(ticketRequestDto.getSeatNumber())) {
+            throw new BadRequestException(
+                    "Seat number " + ticketRequestDto.getSeatNumber() + " is already taken!");
         }
         
-        // 3- Get the appointment details
-        var appointmentDto =
-                appointmentRepository.findAppointmentById(ticketRequestDto.getAppointmentId())
-                        .orElseThrow(() -> new NotFoundException("Appointment not found"));
+        // Check if there are any available seats
+        int totalSeats = appointmentDto.getBusTotalSeats();
+        int reservedSeats = reservedSeatNumbers.size();
         
-        // 4- Count the number of available tickets (seat numbers)
-        int availableSeats = appointmentDto.getBusTotalSeats() - seatNumbers.size();
-        System.out.println("\n" + availableSeats);
-        
-        if (availableSeats <= 0) {
-            throw new BadRequestException("No more tickets for this appointment");
+        if (reservedSeats >= totalSeats) {
+            throw new BadRequestException(
+                    "No more tickets available for this appointment. All "
+                            + totalSeats + " seats are taken.");
         }
         
-        // 5- Ensure the appointment departure time is not passed for the today journey
-        var departureDate = ticketRequestDto.getDepartureDate();
-        var departureTime = appointmentDto.getDepartureTime();
-        var presentDate = LocalDate.now();
-        var presentTime = LocalTime.now();
+        // Check if the requested seat number is valid
+        if (ticketRequestDto.getSeatNumber() <= 0 ||
+                ticketRequestDto.getSeatNumber() > totalSeats) {
+            throw new BadRequestException(
+                    "Invalid seat number. Please choose a seat between 1 and " + totalSeats);
+        }
+    }
+    
+    private AppointmentSimpleDto getAppointmentDetails(Long appointmentId) {
+        return appointmentRepository.findAppointmentById(appointmentId)
+                .orElseThrow(() -> new NotFoundException("Appointment not found"));
+    }
+    
+    private void validateDepartureTimeAndAppointmentStatus(
+            AppointmentSimpleDto appointmentDto, LocalDate departureDate) {
+        LocalDate presentDate = LocalDate.now();
+        LocalTime presentTime = LocalTime.now();
         
-        if (presentTime.isAfter(departureTime) && departureDate.isEqual(presentDate)) {
-            throw new BadRequestException("Can't create the ticket, the today departure time is passed!");
+        if (departureDate.isEqual(presentDate) &&
+                presentTime.isAfter(appointmentDto.getDepartureTime())) {
+            throw new BadRequestException("Can't create the ticket, today's departure time has passed!");
         }
         
-        // 6- Ensure the appointment is still active
-        var endDate = appointmentDto.getEndDate();
-        
+        LocalDate endDate = appointmentDto.getEndDate();
         if (endDate!=null && endDate.isBefore(presentDate)) {
-            throw new BadRequestException("Can't create a ticket for a non active appointment");
+            throw new BadRequestException("Can't create a ticket for an inactive appointment");
         }
-        
-        var appointment = appointmentRepository.getReferenceById(
-                ticketRequestDto.getAppointmentId());
-        
-        var customer = userRepository.findById(ticketRequestDto.getCustomerUserId())
-                .orElseThrow(() -> new NotFoundException("Customer not found"));
-        
-        // 7- Persist the ticket data
-        Ticket ticket;
-        
+    }
+    
+    private Ticket getOrCreateTicket(Long ticketId) {
         if (ticketId!=null) {
-            ticket = ticketRepository.findById(ticketId).orElseThrow(() ->
-                    new NotFoundException("Ticket not found!"));
-        } else {
-            ticket = new Ticket();
+            return ticketRepository.findById(ticketId)
+                    .orElseThrow(() -> new NotFoundException("Ticket not found!"));
         }
-        
+        return new Ticket();
+    }
+    
+    private void updateTicketDetails(Ticket ticket,
+                                     TicketRequestDto ticketRequestDto,
+                                     AppointmentSimpleDto appointmentDto) {
         ticket.setStatus(TicketStatus.valueOf(ticketRequestDto.getStatus()));
         ticket.setPrice(appointmentDto.getPrice());
         ticket.setSeatNumber(ticketRequestDto.getSeatNumber());
         ticket.setDepartureDate(ticketRequestDto.getDepartureDate());
-        ticket.setAppointment(appointment);
-        ticket.setCustomer(customer);
+        ticket.setAppointment(appointmentRepository.getReferenceById(ticketRequestDto.getAppointmentId()));
+        ticket.setCustomer(userRepository.findById(ticketRequestDto.getCustomerUserId())
+                .orElseThrow(() -> new NotFoundException("Customer not found")));
         
-        if (ticketRequestDto.getStatus().equals(TicketStatus.PAID.name())) {
+        if (TicketStatus.PAID.name().equals(ticketRequestDto.getStatus())) {
             ticket.setPaidAt(LocalDateTime.now());
-        } else if (ticketRequestDto.getStatus().equals(TicketStatus.CANCELED.name())){
+        } else if (TicketStatus.CANCELED.name().equals(ticketRequestDto.getStatus())) {
             ticket.setCanceledAt(LocalDateTime.now());
         }
-        
-        ticket = ticketRepository.save(ticket);
-        
-        // TODO: Sending an email with ticket details to the customer
-        
+    }
+    
+    private TicketDetailsResponseDto createTicketDetailsResponse(
+            Ticket ticket,
+            AppointmentSimpleDto appointmentDto) {
         return TicketDetailsResponseDto.builder()
                 .id(ticket.getId())
                 .ticketStatus(ticket.getStatus())
@@ -116,12 +158,12 @@ public class TicketService {
                 .departurePoint(appointmentDto.getDeparturePoint())
                 .destinationPoint(appointmentDto.getDestinationPoint())
                 .busNumber(appointmentDto.getBusNumber())
-                .customerFirstName(customer.getFirstName())
-                .customerLastName(customer.getLastName())
-                .customerEmail(customer.getEmail())
-                .customerPhone(customer.getPhone())
-                .customerUserId(customer.getId())
-                .appointmentId(appointment.getId())
+                .customerFirstName(ticket.getCustomer().getFirstName())
+                .customerLastName(ticket.getCustomer().getLastName())
+                .customerEmail(ticket.getCustomer().getEmail())
+                .customerPhone(ticket.getCustomer().getPhone())
+                .customerUserId(ticket.getCustomer().getId())
+                .appointmentId(ticket.getAppointment().getId())
                 .paidAt(ticket.getPaidAt())
                 .canceledAt(ticket.getCanceledAt())
                 .createdAt(ticket.getCreatedAt())
@@ -132,13 +174,8 @@ public class TicketService {
     }
     
     public TicketDetailsResponseDto getTicketById(Long id) {
-        var ticket = ticketRepository.getTicketById(id);
-        
-        if (ticket==null) {
-            throw new NotFoundException("Ticket not found");
-        }
-        
-        return ticket;
+        return ticketRepository.getTicketById(id)
+                .orElseThrow(()->new NotFoundException("Ticket not found"));
     }
     
     public List<TicketDetailsResponseDto> getAllTickets() {
@@ -168,34 +205,48 @@ public class TicketService {
     
     @Transactional
     public void payTicketById(Long id) {
-        var ticket = ticketRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Ticket not found!"));
+        var ticket = ticketRepository.getTicketById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
         
-        if (ticket.getStatus().equals(TicketStatus.CANCELED)) {
+        if (ticket.getTicketStatus().equals(TicketStatus.CANCELED)) {
             throw new BadRequestException("Can't pay a canceled ticket!");
         }
         
-        if (ticket.getStatus().equals(TicketStatus.PAID)) {
+        if (ticket.getTicketStatus().equals(TicketStatus.PAID)) {
             throw new BadRequestException("Ticket already paid!");
         }
         
         ticketRepository.payTicketById(id, LocalDateTime.now());
         
-        // TODO: Sending an email with ticket status to the customer
+        ticket.setTicketStatus(TicketStatus.PAID);
+        
+        // Sending an email with the new ticket details to the customer
+        sendTicketMessage(ticket);
     }
     
     @Transactional
     public void cancelTicketById(Long id) {
-        var ticket = ticketRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Ticket not found"));
+        var ticket = ticketRepository.getTicketById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket not found"));
         
-        if (ticket.getStatus().equals(TicketStatus.CANCELED)) {
+        if (ticket.getTicketStatus().equals(TicketStatus.CANCELED)) {
             throw new BadRequestException("Ticket already canceled!");
         }
         
         ticketRepository.cancelTicketById(id, LocalDateTime.now());
         
-        // TODO: Sending an email with ticket status to the customer
+        ticket.setTicketStatus(TicketStatus.CANCELED);
+        
+        // Sending an email with the new ticket details to the customer
+        sendTicketMessage(ticket);
+    }
+    
+    private void sendTicketMessage(TicketDetailsResponseDto ticket) {
+        try {
+            emailService.sendTicketMessage(ticket);
+        } catch (MessagingException e) {
+            logger.warning(e.getLocalizedMessage());
+        }
     }
     
 }

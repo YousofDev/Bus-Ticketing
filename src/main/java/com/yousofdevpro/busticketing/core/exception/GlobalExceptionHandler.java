@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,7 +59,7 @@ public class GlobalExceptionHandler {
             NoHandlerFoundException ex) {
         
         ErrorDetails errorDetails = new ErrorDetails(
-                "The requested endpoint was not found",
+                ex.getLocalizedMessage(),
                 HttpStatus.NOT_FOUND.value()
         );
         
@@ -70,7 +71,19 @@ public class GlobalExceptionHandler {
             NoResourceFoundException ex) {
         
         ErrorDetails errorDetails = new ErrorDetails(
-                "The requested endpoint was not found",
+                ex.getLocalizedMessage(),
+                HttpStatus.NOT_FOUND.value()
+        );
+        
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorDetails> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException ex) {
+        
+        ErrorDetails errorDetails = new ErrorDetails(
+                ex.getLocalizedMessage(),
                 HttpStatus.NOT_FOUND.value()
         );
         

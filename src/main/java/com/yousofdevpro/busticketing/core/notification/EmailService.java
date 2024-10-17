@@ -1,6 +1,7 @@
 package com.yousofdevpro.busticketing.core.notification;
 
 import com.yousofdevpro.busticketing.auth.model.User;
+import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,13 @@ public class EmailService {
         String htmlMessage = template.getHtmlAlertMessage(user, message);
         this.sendEmail(user.getEmail(), subject, htmlMessage);
     }
+    
+    public void sendTicketMessage(TicketDetailsResponseDto ticket) throws MessagingException {
+        String subject = "Your Ticket from BusTic";
+        String htmlMessage = template.getHtmTicketMessage(ticket);
+        this.sendEmail(ticket.getCustomerEmail(), subject, htmlMessage);
+    }
+    
+    
     
 }

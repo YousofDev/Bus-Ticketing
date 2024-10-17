@@ -8,13 +8,12 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AppointmentDto {
+public class AppointmentSimpleDto {
     private Long id;
     private CalendarDay calendarDay;
     private ServiceGrade serviceGrade;

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -36,6 +37,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("UPDATE Ticket t SET t.status = 'PAID', t.paidAt = :date WHERE t.id = :ticketId")
     void payTicketById(Long ticketId, @Param("date")LocalDateTime date);
     
+    @Modifying
+    @Transactional
+    @Query("UPDATE Ticket t SET t.appointment.id = :appointmentId WHERE t.id IN :ticketIds")
+    void updateAppointmentId(
+            @Param("appointmentId") Long appointmentId,
+            @Param("ticketIds") List<Long> ticketIds);
+    
     @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
@@ -47,7 +55,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "JOIN a.route r " +
             "JOIN a.bus b " +
             "WHERE t.id = :id")
-    TicketDetailsResponseDto getTicketById(@Param("id") Long id);
+    Optional<TicketDetailsResponseDto> getTicketById(@Param("id") Long id);
     
     @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
@@ -131,5 +139,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<TicketDetailsResponseDto> findValidTicketsByAppointmentId(
             @Param("appointmentId") Long appointmentId,
             @Param("date") LocalDate date);
+    
+    
     
 }
