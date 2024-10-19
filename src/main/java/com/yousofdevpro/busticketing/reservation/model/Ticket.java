@@ -42,9 +42,9 @@ public class Ticket extends BaseEntity{
     @JoinColumn(name = "customer_user_id", nullable = false)
     private User customer;
     
-    @Column(nullable = true)
+    @Column()
     private LocalDateTime paidAt;
     
-    @Column(nullable = true)
+    @Column()
     private LocalDateTime canceledAt;
 }

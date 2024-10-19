@@ -6,6 +6,7 @@ import com.yousofdevpro.busticketing.reservation.service.RouteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +20,13 @@ public class RouteController {
     private final RouteService routeService;
     
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'DRIVER', 'CUSTOMER')")
     public List<RouteResponseDto> getRoutes() {
         return routeService.getRoutes();
     }
     
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RouteResponseDto>addRoute(
             @Validated @RequestBody RouteRequestDto routeRequestDto){
         
@@ -33,11 +36,13 @@ public class RouteController {
     }
     
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'DRIVER', 'CUSTOMER')")
     public RouteResponseDto getRoute(@PathVariable Long id){
         return routeService.getRouteById(id);
     }
     
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RouteResponseDto updateRoute(
             @Validated @RequestBody RouteRequestDto routeRequestDto,
             @PathVariable Long id) {
@@ -46,6 +51,7 @@ public class RouteController {
     }
     
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRoute(@PathVariable Long id) {
         routeService.deleteRouteById(id);
     }

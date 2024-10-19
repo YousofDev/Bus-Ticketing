@@ -43,7 +43,7 @@ public class AuthService {
             throw new BadRequestException("password and passwordAgain must match!");
         }
         
-        String successMessage = "We've sent a confirmation code to " +
+        String successMessage = "We have sent a confirmation code to " +
                 registerRequestDto.getEmail();
         
         String privateMessage = "It appears there was an attempt to register a new account " +
@@ -82,6 +82,12 @@ public class AuthService {
         var user = userRepository.findByEmail(confirmAccountDto.getEmail())
                 .orElseThrow(() -> new AuthenticationException("Invalid confirmation code or email"));
         
+        String successMessage = "Your account has been confirmed successfully";
+        
+        if(user.getIsConfirmed()){
+            return new MessageResponseDto(successMessage);
+        }
+        
         if (user.isOtpNotValid(confirmAccountDto.getCode())) {
             throw new AuthenticationException("Invalid confirmation code or email");
         }
@@ -93,7 +99,7 @@ public class AuthService {
         user.setUpdatedBy(user.getId());
         user = userRepository.save(user);
         
-        return new MessageResponseDto("Your account has been confirmed successfully");
+        return new MessageResponseDto(successMessage);
     }
     
     public TokensResponseDto login(LoginRequestDto loginRequestDto) {
@@ -105,17 +111,17 @@ public class AuthService {
             throw new AuthenticationException("Invalid password or email");
         }
         
+        if (!user.getIsActive()) {
+            throw new AuthorizationException("Your account has been suspended");
+        }
+        
         if (!user.getIsConfirmed()) {
             user.setOtpCode(generateOtpCode());
             user.setOtpCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
             user = userRepository.save(user);
             sendConfirmationMessage(user, "Please, use this code to confirm your account");
             throw new AuthenticationException(
-                    "Your account is not verified, we've sent a confirmation email");
-        }
-        
-        if (!user.getIsActive()) {
-            throw new AuthorizationException("Your account has been suspended");
+                    "Your account was not verified, we have sent a confirmation email");
         }
         
         String accessToken = jwtUtil.generateAccessToken(loginRequestDto.getEmail());
@@ -126,9 +132,9 @@ public class AuthService {
     
     @Transactional
     public MessageResponseDto resetPassword(EmailRequestDto emailRequestDto) {
-        String successMessage = "We've sent a confirmation code to " +
+        String successMessage = "We have sent a confirmation code to " +
                 emailRequestDto.getEmail() +
-                " if this email meets a record on our system";
+                ". if this email matches our records";
         
         Optional<User> existUser = userRepository.findByEmail(emailRequestDto.getEmail());
         
@@ -172,7 +178,7 @@ public class AuthService {
     
     @Transactional
     public MessageResponseDto sendConfirmationCode(EmailRequestDto emailRequestDto) {
-        String successMessage = "We've sent a confirmation code to " +
+        String successMessage = "We have sent a confirmation code to " +
                 emailRequestDto.getEmail();
         
         Optional<User> existUser = userRepository.findByEmail(emailRequestDto.getEmail());
@@ -277,11 +283,11 @@ public class AuthService {
     
     private void sendConfirmationMessage(User user, String message) {
         logger.info("\nConfirmationCode: " + user.getOtpCode());
-        try {
-            emailService.sendConfirmationMessage(user, message);
-        } catch (MessagingException e) {
-            logger.warning(e.getLocalizedMessage());
-        }
+        // try {
+        //     emailService.sendConfirmationMessage(user, message);
+        // } catch (MessagingException e) {
+        //     logger.warning(e.getLocalizedMessage());
+        // }
     }
     
     private void sendAlertMessage(User user, String message) {

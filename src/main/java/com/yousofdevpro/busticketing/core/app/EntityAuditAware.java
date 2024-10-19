@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class AppAuditAware implements AuditorAware<Long> {
+public class EntityAuditAware implements AuditorAware<Long> {
     
     @NonNull
     @Override

@@ -58,7 +58,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         
         if (authHeader==null || !authHeader.startsWith("Bearer ")) {
-            
             if (!isAllowed) {
                 writeException(
                         response,
@@ -82,12 +81,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 
                 if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
                             userDetails.getAuthorities()
                     );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }

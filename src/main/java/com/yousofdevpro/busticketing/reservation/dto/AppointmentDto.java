@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AppointmentSimpleDto {
+public class AppointmentDto {
     private Long id;
     private CalendarDay calendarDay;
     private ServiceGrade serviceGrade;

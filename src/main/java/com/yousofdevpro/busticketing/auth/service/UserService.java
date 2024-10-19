@@ -21,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     
     @Transactional
-    public void createUser(UserRequestDto userRequestDto) {
+    public UserDtoResponse createUser(UserRequestDto userRequestDto) {
         
         Optional<User> existUser = userRepository.findByEmail(userRequestDto.getEmail());
         
@@ -39,6 +39,8 @@ public class UserService {
                 .build();
         
         user = userRepository.save(user);
+        
+        return mapToUserDtoResponse(user);
     }
     
     public List<UserDtoResponse> getUsers() {
@@ -65,6 +67,10 @@ public class UserService {
         
         user = userRepository.save(user);
         
+        return mapToUserDtoResponse(user);
+    }
+    
+    private UserDtoResponse mapToUserDtoResponse(User user){
         return UserDtoResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())

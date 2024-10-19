@@ -6,6 +6,7 @@ import com.yousofdevpro.busticketing.reservation.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class TicketController {
     private final TicketService ticketService;
     
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'CUSTOMER')")
     public ResponseEntity<TicketDetailsResponseDto> createTicket(
             @Validated @RequestBody TicketRequestDto ticketRequestDto) {
         var createdTicket =
@@ -27,6 +29,7 @@ public class TicketController {
     }
     
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<TicketDetailsResponseDto> getAllTickets(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size){
@@ -35,11 +38,13 @@ public class TicketController {
     }
     
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'CUSTOMER')")
     public TicketDetailsResponseDto getTicketById(@PathVariable Long id){
         return ticketService.getTicketById(id);
     }
     
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public TicketDetailsResponseDto updateTicketById(
             @Validated @RequestBody TicketRequestDto ticketRequestDto,
             @PathVariable Long id) {
@@ -47,41 +52,48 @@ public class TicketController {
     }
     
     @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public ResponseEntity<Void> cancelTicketById(@PathVariable Long id) {
         ticketService.cancelTicketById(id);
         return ResponseEntity.noContent().build();
     }
     
     @PatchMapping("/{id}/pay")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'CUSTOMER')")
     public ResponseEntity<Void> payTicketById(@PathVariable Long id) {
         ticketService.payTicketById(id);
         return ResponseEntity.ok().build();
     }
     
     @GetMapping("/customers/{customerId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'CUSTOMER')")
     public List<TicketDetailsResponseDto> getAllTicketsByCustomerId(
             @PathVariable Long customerId) {
         return ticketService.getAllTicketsByCustomerId(customerId);
     }
     
     @GetMapping("/appointments/{appointmentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<TicketDetailsResponseDto> getAllTicketsByAppointmentId(
             @PathVariable Long appointmentId) {
         return ticketService.getAllTicketsByAppointmentId(appointmentId);
     }
     
     @GetMapping("/valid")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<TicketDetailsResponseDto> getAllValidTickets() {
         return ticketService.getAllValidTickets();
     }
     
     @GetMapping("/customers/{customerId}/valid")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<TicketDetailsResponseDto> getValidTicketsByCustomerId(
             @PathVariable Long customerId) {
         return ticketService.getValidTicketsByCustomerId(customerId);
     }
     
     @GetMapping("/appointments/{appointmentId}/valid")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<TicketDetailsResponseDto> getValidTicketsByAppointmentId(
             @PathVariable Long appointmentId) {
         return ticketService.getValidTicketsByAppointmentId(appointmentId);

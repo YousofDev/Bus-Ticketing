@@ -42,7 +42,7 @@ public class Appointment extends BaseEntity {
     @Column(nullable = false)
     private LocalDate effectiveDate;
     
-    @Column(nullable = true)
+    @Column()
     private LocalDate endDate;
     
     @ManyToOne(fetch = FetchType.LAZY)

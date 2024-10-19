@@ -4,7 +4,7 @@ import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.BadRequestException;
 import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import com.yousofdevpro.busticketing.core.notification.EmailService;
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentSimpleDto;
+import com.yousofdevpro.busticketing.reservation.dto.AppointmentDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
@@ -37,7 +37,7 @@ public class TicketService {
     public TicketDetailsResponseDto saveTicket(TicketRequestDto ticketRequestDto, Long ticketId) {
         
         // 1. Get appointment details
-        AppointmentSimpleDto appointmentDto =
+        AppointmentDto appointmentDto =
                 getAppointmentDetails(ticketRequestDto.getAppointmentId());
         
         // 2. Check ticket availability
@@ -66,7 +66,7 @@ public class TicketService {
     }
     
     private void checkSeatAndTicketAvailability(
-            AppointmentSimpleDto appointmentDto, TicketRequestDto ticketRequestDto) {
+            AppointmentDto appointmentDto, TicketRequestDto ticketRequestDto) {
         List<Integer> reservedSeatNumbers = ticketRepository.findReservedSeatNumbers(
                 ticketRequestDto.getAppointmentId(),
                 ticketRequestDto.getDepartureDate());
@@ -95,13 +95,13 @@ public class TicketService {
         }
     }
     
-    private AppointmentSimpleDto getAppointmentDetails(Long appointmentId) {
+    private AppointmentDto getAppointmentDetails(Long appointmentId) {
         return appointmentRepository.findAppointmentById(appointmentId)
                 .orElseThrow(() -> new NotFoundException("Appointment not found"));
     }
     
     private void validateDepartureTimeAndAppointmentStatus(
-            AppointmentSimpleDto appointmentDto, LocalDate departureDate) {
+            AppointmentDto appointmentDto, LocalDate departureDate) {
         LocalDate presentDate = LocalDate.now();
         LocalTime presentTime = LocalTime.now();
         
@@ -126,7 +126,7 @@ public class TicketService {
     
     private void updateTicketDetails(Ticket ticket,
                                      TicketRequestDto ticketRequestDto,
-                                     AppointmentSimpleDto appointmentDto) {
+                                     AppointmentDto appointmentDto) {
         ticket.setStatus(TicketStatus.valueOf(ticketRequestDto.getStatus()));
         ticket.setPrice(appointmentDto.getPrice());
         ticket.setSeatNumber(ticketRequestDto.getSeatNumber());
@@ -144,7 +144,7 @@ public class TicketService {
     
     private TicketDetailsResponseDto createTicketDetailsResponse(
             Ticket ticket,
-            AppointmentSimpleDto appointmentDto) {
+            AppointmentDto appointmentDto) {
         return TicketDetailsResponseDto.builder()
                 .id(ticket.getId())
                 .ticketStatus(ticket.getStatus())

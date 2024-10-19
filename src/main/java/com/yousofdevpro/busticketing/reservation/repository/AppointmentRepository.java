@@ -1,7 +1,7 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
+import com.yousofdevpro.busticketing.reservation.dto.AppointmentDto;
 import com.yousofdevpro.busticketing.reservation.dto.AppointmentResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentSimpleDto;
 import com.yousofdevpro.busticketing.reservation.model.Appointment;
 import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.AppointmentSimpleDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.AppointmentDto(" +
             "a.id, a.calendarDay, a.serviceGrade, a.price, a.departureTime, a.arrivalTime, " +
             "r.departurePoint, r.destinationPoint, " +
             "b.busNumber, b.totalSeats, a.endDate) " +
@@ -27,7 +27,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "JOIN a.bus b " +
             "JOIN a.route r " +
             "WHERE a.id = :id")
-    Optional<AppointmentSimpleDto> findAppointmentById(@Param("id") Long id);
+    Optional<AppointmentDto> findAppointmentById(@Param("id") Long id);
     
     @Query("SELECT a FROM Appointment a " +
             "WHERE a.calendarDay = :calendarDay " +

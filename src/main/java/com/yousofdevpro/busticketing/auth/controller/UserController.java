@@ -4,7 +4,9 @@ import com.yousofdevpro.busticketing.auth.dto.UserRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,23 +20,27 @@ public class UserController {
     private final UserService userService;
     
     @PostMapping
-    public ResponseEntity<?> createUser(
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDtoResponse> createUser(
             @Validated @RequestBody UserRequestDto userRequestDto){
-        userService.createUser(userRequestDto);
-        return ResponseEntity.accepted().build();
+        var createdUser = userService.createUser(userRequestDto);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDtoResponse> getUsers() {
         return userService.getUsers();
     }
     
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
     public List<UserDtoResponse> getUserById(@PathVariable Long id) {
         return userService.getUsers();
     }
     
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public UserDtoResponse updateUserById(
             @PathVariable Long id,
             @Validated @RequestBody UserRequestDto userRequestDto) {
