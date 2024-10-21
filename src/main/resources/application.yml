@@ -4,24 +4,28 @@ server:
     include-binding-errors: always
 
 spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+    resources:
+      add-mappings: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/busticketing
-    username: postgres
-    password: 1234
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create-drop # must change
     properties:
       hibernate:
         format_sql: true
     show-sql: true
 
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: me@gmail.com
-    password: secret
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -34,8 +38,10 @@ spring:
 application:
   security:
     jwt:
-      secret: 5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
-      expiration: 8640000 # 1 day
+      secret-key: ${ACCESS_TOKEN_SECRET_KEY}
+      access-expiration: ${ACCESS_TOKEN_EXPIRATION} # 1 day
+      refresh-expiration: ${REFRESH_TOKEN_EXPIRATION} # 7 day
+
 
 logging:
   level:
