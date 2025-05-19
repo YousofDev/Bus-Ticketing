@@ -1,13 +1,12 @@
-package com.yousofdevpro.busticketing.auth.dto;
+package com.yousofdevpro.busticketing.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class ProfileRequestDto {
+public class UserRequestDto {
     
     @NotBlank(message = "firstName is required")
     private String firstName;

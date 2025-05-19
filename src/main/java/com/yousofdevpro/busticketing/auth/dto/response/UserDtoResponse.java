@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.auth.dto;
+package com.yousofdevpro.busticketing.auth.dto.response;
 
 import com.yousofdevpro.busticketing.auth.model.Role;
 import lombok.AllArgsConstructor;

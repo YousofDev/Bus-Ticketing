@@ -1,6 +1,9 @@
 package com.yousofdevpro.busticketing.auth.controller;
 
-import com.yousofdevpro.busticketing.auth.dto.*;
+import com.yousofdevpro.busticketing.auth.dto.request.*;
+import com.yousofdevpro.busticketing.auth.dto.response.MessageResponseDto;
+import com.yousofdevpro.busticketing.auth.dto.response.TokensResponseDto;
+import com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.core.app;
+package com.yousofdevpro.busticketing.core.config;
 
 import com.yousofdevpro.busticketing.auth.model.User;
 import org.springframework.data.domain.AuditorAware;

@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.reservation.dto;
+package com.yousofdevpro.busticketing.reservation.dto.internal;
 
 import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
 import com.yousofdevpro.busticketing.reservation.model.ServiceGrade;

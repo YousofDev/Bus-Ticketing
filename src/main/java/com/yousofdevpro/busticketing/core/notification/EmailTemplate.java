@@ -1,7 +1,7 @@
 package com.yousofdevpro.busticketing.core.notification;
 
 import com.yousofdevpro.busticketing.auth.model.User;
-import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component

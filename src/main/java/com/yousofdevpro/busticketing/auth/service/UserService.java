@@ -1,7 +1,7 @@
 package com.yousofdevpro.busticketing.auth.service;
 
-import com.yousofdevpro.busticketing.auth.dto.UserRequestDto;
-import com.yousofdevpro.busticketing.auth.dto.UserDtoResponse;
+import com.yousofdevpro.busticketing.auth.dto.request.UserRequestDto;
+import com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.model.Role;
 import com.yousofdevpro.busticketing.auth.model.User;
 import com.yousofdevpro.busticketing.auth.repository.UserRepository;

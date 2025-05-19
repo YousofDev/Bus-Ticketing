@@ -1,7 +1,7 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentDto;
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.internal.AppointmentDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.AppointmentResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Appointment;
 import com.yousofdevpro.busticketing.reservation.model.CalendarDay;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.AppointmentDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.internal.AppointmentDto(" +
             "a.id, a.calendarDay, a.serviceGrade, a.price, a.departureTime, a.arrivalTime, " +
             "r.departurePoint, r.destinationPoint, " +
             "b.busNumber, b.totalSeats, a.endDate) " +
@@ -47,7 +47,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "WHERE a.id = :appointmentId")
     List<Long> findAnyTicketByAppointmentId(@Param("appointmentId") Long appointmentId);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.AppointmentResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.AppointmentResponseDto(" +
             "a.id, a.calendarDay, a.serviceGrade, a.price, a.departureTime, a.arrivalTime, r.id, " +
             "r.departurePoint, r.destinationPoint, d.id, d.firstName, d.lastName, d.email, d.phone, " +
             "b.id, b.name, b.busNumber, b.totalSeats, " +

@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.reservation.dto;
+package com.yousofdevpro.busticketing.reservation.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

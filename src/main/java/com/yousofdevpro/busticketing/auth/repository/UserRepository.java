@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.auth.repository;
 
-import com.yousofdevpro.busticketing.auth.dto.UserDtoResponse;
+import com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,13 +15,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.auth.dto.UserDtoResponse(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse(" +
             "u.id, u.firstName, u.lastName, u.email, u.phone, u.role, " +
             "u.createdAt, u.updatedAt, u.createdBy, u.updatedBy) "+
             "FROM User u")
     List<UserDtoResponse>findAllUsers();
     
-    @Query("SELECT new com.yousofdevpro.busticketing.auth.dto.UserDtoResponse(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse(" +
             "u.id, u.firstName, u.lastName, u.email, u.phone, u.role, " +
             "u.createdAt, u.updatedAt, u.createdBy, u.updatedBy) " +
             "FROM User u " +

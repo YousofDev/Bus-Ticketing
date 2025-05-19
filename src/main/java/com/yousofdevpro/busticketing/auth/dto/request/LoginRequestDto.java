@@ -1,13 +1,16 @@
-package com.yousofdevpro.busticketing.auth.dto;
+package com.yousofdevpro.busticketing.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class EmailRequestDto {
+public class LoginRequestDto {
     
     @NotBlank(message = "email is required")
     @Email(message = "email should be valid")
     private String email;
+    
+    @NotBlank(message = "password is required")
+    private String password;
 }

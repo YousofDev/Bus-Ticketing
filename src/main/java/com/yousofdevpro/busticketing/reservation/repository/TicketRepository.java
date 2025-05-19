@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
-import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +43,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("appointmentId") Long appointmentId,
             @Param("ticketIds") List<Long> ticketIds);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -57,7 +56,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE t.id = :id")
     Optional<TicketDetailsResponseDto> getTicketById(@Param("id") Long id);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -69,7 +68,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "JOIN a.bus b ")
     List<TicketDetailsResponseDto>findAllTickets();
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -82,7 +81,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE c.id = :customerId")
     List<TicketDetailsResponseDto> findAllTicketsByCustomerId(@Param("customerId") Long customerId);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -95,7 +94,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE a.id = :appointmentId")
     List<TicketDetailsResponseDto> findAllTicketsByAppointmentId(@Param("appointmentId") Long appointmentId);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -108,7 +107,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "WHERE t.departureDate >= :date")
     List<TicketDetailsResponseDto> findAllValidTickets(@Param("date") LocalDate date);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +
@@ -124,7 +123,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("customerId") Long customerId,
             @Param("date") LocalDate date);
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto(" +
             "t.id, t.status, a.serviceGrade, t.price, t.seatNumber, a.calendarDay, " +
             "t.departureDate, a.departureTime, a.arrivalTime, r.departurePoint, r.destinationPoint, " +
             "b.busNumber, c.firstName, c.lastName, c.email, c.phone, c.id, a.id, " +

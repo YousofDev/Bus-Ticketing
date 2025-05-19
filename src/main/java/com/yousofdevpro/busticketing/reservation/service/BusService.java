@@ -1,8 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.core.exception.NotFoundException;
-import com.yousofdevpro.busticketing.reservation.dto.BusRequestDto;
-import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.request.BusRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.BusResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Bus;
 import com.yousofdevpro.busticketing.reservation.repository.BusRepository;
 import lombok.AllArgsConstructor;

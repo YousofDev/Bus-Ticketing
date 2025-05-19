@@ -1,7 +1,7 @@
 package com.yousofdevpro.busticketing.reservation.controller;
 
-import com.yousofdevpro.busticketing.reservation.dto.TicketDetailsResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.TicketRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.TicketDetailsResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.request.TicketRequestDto;
 import com.yousofdevpro.busticketing.reservation.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

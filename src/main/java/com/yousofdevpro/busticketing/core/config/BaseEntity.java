@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.core.app;
+package com.yousofdevpro.busticketing.core.config;
 
 import jakarta.persistence.*;
 import lombok.Builder;

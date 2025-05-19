@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.model;
 
-import com.yousofdevpro.busticketing.core.app.BaseEntity;
+import com.yousofdevpro.busticketing.core.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

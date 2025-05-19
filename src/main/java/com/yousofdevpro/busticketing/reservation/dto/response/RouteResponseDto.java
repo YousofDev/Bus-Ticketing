@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.reservation.dto;
+package com.yousofdevpro.busticketing.reservation.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

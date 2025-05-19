@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
-import com.yousofdevpro.busticketing.reservation.dto.BusResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.BusResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Bus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,14 +15,14 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface BusRepository extends JpaRepository<Bus, Long> {
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.BusResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.BusResponseDto(" +
             "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, " +
             "b.createdAt, b.updatedAt, b.createdBy, b.updatedBy) " +
             "FROM Bus b")
     List<BusResponseDto> fetchBuses();
     
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.BusResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.BusResponseDto(" +
             "b.id, b.busNumber, b.name, b.totalSeats, b.isActive, " +
             "b.createdAt, b.updatedAt, b.createdBy, b.updatedBy) " +
             "FROM Bus b WHERE b.id = :id")

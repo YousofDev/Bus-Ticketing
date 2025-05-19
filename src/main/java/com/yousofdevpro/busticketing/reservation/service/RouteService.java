@@ -1,8 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.service;
 
 import com.yousofdevpro.busticketing.core.exception.NotFoundException;
-import com.yousofdevpro.busticketing.reservation.dto.RouteRequestDto;
-import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.request.RouteRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.RouteResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Route;
 import com.yousofdevpro.busticketing.reservation.repository.RouteRepository;
 import lombok.AllArgsConstructor;

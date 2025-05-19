@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.reservation.repository;
 
-import com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.RouteResponseDto;
 import com.yousofdevpro.busticketing.reservation.model.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,13 +15,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface RouteRepository extends JpaRepository<Route, Long> {
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.RouteResponseDto(" +
             "r.id, r.departurePoint, r.destinationPoint, r.isActive, " +
             "r.createdAt, r.updatedAt, r.createdBy, r.updatedBy) " +
             "FROM Route r")
     List<RouteResponseDto>fetchRoutes();
     
-    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.RouteResponseDto(" +
+    @Query("SELECT new com.yousofdevpro.busticketing.reservation.dto.response.RouteResponseDto(" +
             "r.id, r.departurePoint, r.destinationPoint, r.isActive, " +
             "r.createdAt, r.updatedAt, r.createdBy, r.updatedBy) " +
             "FROM Route r WHERE id = :id")

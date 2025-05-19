@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.auth.dto;
+package com.yousofdevpro.busticketing.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

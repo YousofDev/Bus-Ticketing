@@ -1,8 +1,8 @@
 package com.yousofdevpro.busticketing.reservation.controller;
 
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentRequestDto;
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentResponseDto;
-import com.yousofdevpro.busticketing.reservation.dto.AppointmentSeatsResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.request.AppointmentRequestDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.AppointmentResponseDto;
+import com.yousofdevpro.busticketing.reservation.dto.response.AppointmentSeatsResponseDto;
 import com.yousofdevpro.busticketing.reservation.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
