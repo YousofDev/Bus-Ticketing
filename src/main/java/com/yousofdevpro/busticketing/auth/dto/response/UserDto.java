@@ -1,7 +1,10 @@
 package com.yousofdevpro.busticketing.auth.dto.response;
 
 import com.yousofdevpro.busticketing.auth.model.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -9,16 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class UserDtoResponse {
-    private Long id;
+public class UserDto {
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
     private String phone;
     private Role role;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Long createdBy;
-    private Long updatedBy;
 }

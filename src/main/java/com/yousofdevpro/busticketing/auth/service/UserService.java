@@ -1,5 +1,6 @@
 package com.yousofdevpro.busticketing.auth.service;
 
+import com.yousofdevpro.busticketing.auth.dto.request.RegisterRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.request.UserRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.model.Role;
@@ -8,6 +9,7 @@ import com.yousofdevpro.busticketing.auth.repository.UserRepository;
 import com.yousofdevpro.busticketing.core.exception.ConflictException;
 import com.yousofdevpro.busticketing.core.exception.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,23 +21,25 @@ import java.util.Optional;
 public class UserService {
     
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     
     @Transactional
-    public UserDtoResponse createUser(UserRequestDto userRequestDto) {
+    public UserDtoResponse createUser(RegisterRequestDto registerRequestDto) {
         
-        Optional<User> existUser = userRepository.findByEmail(userRequestDto.getEmail());
+        Optional<User> existUser = userRepository.findByEmail(registerRequestDto.getEmail());
         
         if (existUser.isPresent()) {
             throw new ConflictException("User already exists");
         }
         
         var user = User.builder()
-                .firstName(userRequestDto.getFirstName())
-                .lastName(userRequestDto.getLastName())
-                .phone(userRequestDto.getPhone())
-                .email(userRequestDto.getEmail())
-                .role(Role.valueOf(userRequestDto.getRole()))
-                .isConfirmed(false)
+                .firstName(registerRequestDto.getFirstName())
+                .lastName(registerRequestDto.getLastName())
+                .phone(registerRequestDto.getPhone())
+                .email(registerRequestDto.getEmail())
+                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
+                .role(Role.valueOf(registerRequestDto.getRole()))
+                .isConfirmed(true)
                 .build();
         
         user = userRepository.save(user);
@@ -50,6 +54,11 @@ public class UserService {
     public UserDtoResponse getUserById(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+    
+    public UserDtoResponse getUserByEmail(String email) {
+        Optional<User> existUser = userRepository.findByEmail(email);
+        return existUser.map(this::mapToUserDtoResponse).orElse(null);
     }
     
     @Transactional

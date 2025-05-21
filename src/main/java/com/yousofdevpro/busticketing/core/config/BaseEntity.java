@@ -37,7 +37,7 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
     
     @CreatedBy
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = true, updatable = false)
     private Long createdBy;
     
     @LastModifiedBy

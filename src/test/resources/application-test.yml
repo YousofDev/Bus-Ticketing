@@ -9,13 +9,13 @@ spring:
     resources:
       add-mappings: false
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: update # must change
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true

@@ -1,5 +1,6 @@
 package com.yousofdevpro.busticketing.auth.controller;
 
+import com.yousofdevpro.busticketing.auth.dto.request.RegisterRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.request.UserRequestDto;
 import com.yousofdevpro.busticketing.auth.dto.response.UserDtoResponse;
 import com.yousofdevpro.busticketing.auth.service.UserService;
@@ -22,8 +23,8 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDtoResponse> createUser(
-            @Validated @RequestBody UserRequestDto userRequestDto){
-        var createdUser = userService.createUser(userRequestDto);
+            @Validated @RequestBody RegisterRequestDto registerRequestDto){
+        var createdUser = userService.createUser(registerRequestDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     

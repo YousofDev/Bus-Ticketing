@@ -256,7 +256,7 @@ public class AuthService {
         if (!passwordEncoder.matches(
                 changePasswordRequestDto.getCurrentPassword(),
                 user.getPassword())) {
-            throw new AuthenticationException("current password is wrong!");
+            throw new AuthenticationException("Current password is incorrect!");
         }
         
         user.setPassword(passwordEncoder.encode(changePasswordRequestDto.getPassword()));
