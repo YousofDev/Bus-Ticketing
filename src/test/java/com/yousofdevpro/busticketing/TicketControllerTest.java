@@ -118,6 +118,11 @@ public class TicketControllerTest extends BaseIntegrationTest {
                 .routeId(route.getId())
                 .build();
         
+        var conflictAppointments = appointmentService.getConflictAppointments(appointment);
+        if (!conflictAppointments.isEmpty()) {
+            return appointmentService.mapToAppointmentDto(conflictAppointments.get(0));
+        }
+        
         return appointmentService.createAppointment(appointment);
     }
     

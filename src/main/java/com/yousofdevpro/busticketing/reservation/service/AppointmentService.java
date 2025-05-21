@@ -47,7 +47,10 @@ public class AppointmentService {
     @Transactional
     public AppointmentResponseDto createAppointment(AppointmentRequestDto dto) {
         
-        validateAppointmentConflict(dto);
+        var conflictAppointments = getConflictAppointments(dto);
+        if (!conflictAppointments.isEmpty()) {
+            throw new ConflictException("Bus or Driver is already scheduled for another appointment at this time");
+        }
         
         var appointment = Appointment.builder()
                 .calendarDay(CalendarDay.valueOf(dto.getCalendarDay()))
@@ -81,7 +84,10 @@ public class AppointmentService {
         
         // if the appointment not associated with any ticket, just update this appointment
         if (tickets.isEmpty()) {
-            validateAppointmentConflict(dto);
+            var conflictAppointments = getConflictAppointments(dto);
+            if (!conflictAppointments.isEmpty()) {
+                throw new ConflictException("Bus or Driver is already scheduled for another appointment at this time");
+            }
             appointment.setCalendarDay(CalendarDay.valueOf(dto.getCalendarDay()));
             appointment.setServiceGrade(ServiceGrade.valueOf(dto.getServiceGrade()));
             appointment.setPrice(dto.getPrice());
@@ -103,7 +109,11 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
         
         // Create new appointment
-        validateAppointmentConflict(dto);
+        var conflictAppointments = getConflictAppointments(dto);
+        if (!conflictAppointments.isEmpty()) {
+            throw new ConflictException("Bus or Driver is already scheduled for another appointment at this time");
+        }
+        
         var newAppointment = Appointment.builder()
                 .calendarDay(CalendarDay.valueOf(dto.getCalendarDay()))
                 .serviceGrade(ServiceGrade.valueOf(dto.getServiceGrade()))
@@ -128,15 +138,15 @@ public class AppointmentService {
                 t.getDepartureDate().isEqual(dto.getEffectiveDate()) ||
                         t.getDepartureDate().isAfter(dto.getEffectiveDate())).toList();
         
-        if(!presentTickets.isEmpty()){
+        if (!presentTickets.isEmpty()) {
             // Update these tickets with the new appointment
-            List<Long>ticketIds = presentTickets.stream()
+            List<Long> ticketIds = presentTickets.stream()
                     .map(TicketDetailsResponseDto::getId).toList();
             
             ticketRepository.updateAppointmentId(appointmentId, ticketIds);
             
             // Send notifications to customers with the new appointment changes
-            for(TicketDetailsResponseDto ticket: presentTickets){
+            for (TicketDetailsResponseDto ticket : presentTickets) {
                 try {
                     emailService.sendTicketMessage(ticket);
                 } catch (MessagingException e) {
@@ -158,7 +168,7 @@ public class AppointmentService {
                 .orElseThrow(() -> new NotFoundException("Appointment not found"));
         
         List<Long> tickets = appointmentRepository.findAnyTicketByAppointmentId(appointmentId);
-
+        
         if (!tickets.isEmpty()) {
             throw new ConflictException("Cannot delete an appointment that has associated with tickets");
         }
@@ -224,19 +234,15 @@ public class AppointmentService {
     /**
      * Validates if the bus or driver is already booked during the selected time slot.
      */
-    private void validateAppointmentConflict(AppointmentRequestDto dto) {
-        List<Appointment> conflictingAppointments =
-                appointmentRepository.findConflictingAppointments(
-                        dto.getBusId(),
-                        dto.getDriverUserId(),
-                        CalendarDay.valueOf(dto.getCalendarDay()),
-                        LocalTime.parse(dto.getDepartureTime()),
-                        LocalTime.parse(dto.getArrivalTime()));
-        
-        if (!conflictingAppointments.isEmpty()) {
-            throw new ConflictException("Bus or Driver is already scheduled for another appointment at this time");
-        }
+    public List<Appointment> getConflictAppointments(AppointmentRequestDto dto) {
+        return appointmentRepository.findConflictingAppointments(
+                dto.getBusId(),
+                dto.getDriverUserId(),
+                CalendarDay.valueOf(dto.getCalendarDay()),
+                LocalTime.parse(dto.getDepartureTime()),
+                LocalTime.parse(dto.getArrivalTime()));
     }
+    
     
     public AppointmentResponseDto mapToAppointmentDto(Appointment appointment) {
         return AppointmentResponseDto.builder()

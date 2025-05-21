@@ -32,36 +32,38 @@ public class AuthControllerTest extends BaseIntegrationTest {
     private PasswordEncoder passwordEncoder;
     
     private String userEmail;
+    private Long userId;
     private HttpHeaders userHeaders;
     
     private User createUser(){
-        // First create an unconfirmed user
-        User confirmedUser = User.builder()
-                .firstName("confirmed")
-                .lastName("User")
-                .phone("01100000000")
-                .email("confirmed@test.com")
-                .password(passwordEncoder.encode("password123"))
-                .role(Role.CUSTOMER)
-                .isConfirmed(true)
-                .isActive(true)
-                .otpCode("123456")
-                .otpCodeExpiresAt(LocalDateTime.now().plusMinutes(30))
-                .build();
-        return userRepository.save(confirmedUser);
+        // Create test user if not exists
+        return userRepository.findByEmail("confirmed@test.com").orElseGet(() -> {
+            User newUser = User.builder()
+                    .firstName("Test")
+                    .lastName("User")
+                    .phone("01123456879")
+                    .email("confirmed@test.com")
+                    .password(passwordEncoder.encode("password123"))
+                    .role(Role.CUSTOMER)
+                    .isConfirmed(true)
+                    .isActive(true)
+                    .build();
+            return userRepository.save(newUser);
+        });
     }
     
     @BeforeEach
     void setup(){
         User user = createUser();
         userEmail = user.getEmail();
+        userId = user.getId();
         userHeaders = new HttpHeaders();
         userHeaders.setBearerAuth(getCustomerToken(userEmail));
     }
     
     @AfterEach
-    void clear() {
-        userRepository.deleteAll();
+    void clear(){
+        userRepository.deleteById(userId);
     }
     
     @Test
@@ -188,7 +190,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         assertEquals(userEmail, response.getBody().getEmail());
     }
     
-    @Test
+    @Test //
     void shouldUpdateUserProfileSuccessfully() {
         // Given
         ProfileRequestDto profileRequest = ProfileRequestDto.builder()
@@ -218,7 +220,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         assertEquals("Updated", updatedUser.getFirstName());
     }
     
-    @Test
+    @Test //
     void shouldChangePasswordSuccessfully() {
         // Given
         ChangePasswordRequestDto changePasswordRequest = new ChangePasswordRequestDto();
@@ -344,7 +346,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         assertTrue(response.getBody().contains("Invalid"));
     }
     
-    @Test
+    @Test //
     void shouldRefreshTokenSuccessfully() {
         // First login to get refresh token
         LoginRequestDto loginRequest = new LoginRequestDto(userEmail, "password123");

@@ -80,7 +80,7 @@ public abstract class BaseIntegrationTest {
                     .firstName("Customer")
                     .lastName("User")
                     .phone("01157889451")
-                    .email("customer@test.com")
+                    .email(email)
                     .password("password123")
                     .passwordAgain("password123")
                     .role("CUSTOMER")

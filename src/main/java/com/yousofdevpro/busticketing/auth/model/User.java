@@ -131,4 +131,7 @@ public class User implements UserDetails {
                 !this.getOtpCode().equals(code);
     }
     
+    public User(String email) {
+        this.email = email;
+    }
 }
