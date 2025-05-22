@@ -35,18 +35,6 @@
 		<java.version>21</java.version>
 	</properties>
 
-<!--	<profiles>-->
-<!--		<profile>-->
-<!--			<id>local-dev</id>-->
-<!--			<properties>-->
-<!--				<spring.profiles.active>test</spring.profiles.active>-->
-<!--			</properties>-->
-<!--			<activation>-->
-<!--				<activeByDefault>true</activeByDefault>-->
-<!--			</activation>-->
-<!--		</profile>-->
-<!--	</profiles>-->
-
 	<dependencies>
 	
 		<dependency>
@@ -114,13 +102,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-
-		<!-- H2 Database for Testing -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

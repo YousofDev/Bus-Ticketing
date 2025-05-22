@@ -1,0 +1,50 @@
+server:
+  error:
+    include-messages: always
+    include-binding-errors: always
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+    resources:
+      add-mappings: false
+  datasource:
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+            auth: false
+            starttls:
+              enable: false
+
+application:
+  security:
+    jwt:
+      secret-key: ${ACCESS_TOKEN_SECRET_KEY}
+      access-expiration: ${ACCESS_TOKEN_EXPIRATION}
+      refresh-expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.http: DEBUG
