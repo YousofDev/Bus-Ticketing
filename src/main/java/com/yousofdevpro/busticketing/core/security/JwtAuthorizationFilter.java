@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.core.security;
 
-
+import static com.yousofdevpro.busticketing.core.config.Constants.PERMITTED_URLS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yousofdevpro.busticketing.core.exception.AuthenticationException;
 import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
@@ -34,17 +34,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     
-    private static final Set<String> ALLOWED_URLS = new HashSet<>(
-            Arrays.asList(
-                    "/api/v1/auth/register",
-                    "/api/v1/auth/confirm-account",
-                    "/api/v1/auth/login",
-                    "/api/v1/auth/reset-password",
-                    "/api/v1/auth/reset-password-confirm",
-                    "/api/v1/auth/send-confirmation-code",
-                    "/api/v1/auth/verify-confirmation-code"
-            ));
-    
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -53,7 +42,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-        boolean isAllowed = ALLOWED_URLS.contains(requestURI);
+        boolean isAllowed = PERMITTED_URLS.contains(requestURI);
         
         final String authHeader = request.getHeader("Authorization");
         

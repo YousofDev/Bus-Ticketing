@@ -9,6 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.yousofdevpro.busticketing.core.config.Constants.PERMITTED_URLS;
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -17,31 +19,22 @@ public class SecurityConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
         
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(
-                        "/api/v1/auth/register",
-                        "/api/v1/auth/confirm-account",
-                        "/api/v1/auth/login",
-                        "/api/v1/auth/reset-password",
-                        "/api/v1/auth/reset-password-confirm",
-                        "/api/v1/auth/send-confirmation-code",
-                        "/api/v1/auth/verify-confirmation-code"
-                )
-                .permitAll()
-                .requestMatchers("/api/v1/**").authenticated()
-                .anyRequest().authenticated())
+                        .requestMatchers(PERMITTED_URLS.toArray(new String[0]))
+                        .permitAll()
+                        .requestMatchers("/api/v1/**").authenticated()
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthorizationFilter,
                         UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(c->
+                .sessionManagement(c ->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         
         return http.build();
     }
-    
     
     
 }

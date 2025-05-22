@@ -8,6 +8,8 @@ management:
     web:
       exposure:
         include: health
+    health:
+      enabled: true
 
 spring:
   mvc:

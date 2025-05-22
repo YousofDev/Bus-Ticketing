@@ -14,6 +14,7 @@ public class Constants {
                     "/api/v1/auth/reset-password",
                     "/api/v1/auth/reset-password-confirm",
                     "/api/v1/auth/send-confirmation-code",
-                    "/api/v1/auth/verify-confirmation-code"
+                    "/api/v1/auth/verify-confirmation-code",
+                    "/actuator/health"
             ));
 }
