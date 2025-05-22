@@ -67,7 +67,7 @@ public class AuthService {
                 .email(registerRequestDto.getEmail())
                 .password(passwordEncoder.encode(registerRequestDto.getPassword()))
                 .role(Role.valueOf(registerRequestDto.getRole()))
-                .isConfirmed(false)
+                .isConfirmed(true) // must be false on production, so the user would receive the confirmation code
                 .otpCode(generateOtpCode())
                 .otpCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
                 .build();
