@@ -181,8 +181,8 @@ busticketing/
 
 ## 🔄 CI/CD Pipeline
 
-The project uses **GitHub Actions** for continuous integration and deployment:
-- **Testing**: Runs code quality checks and tests on every push/pull request.
+The project uses **GitHub Actions** for automated building and testing:
+- **Testing**: Runs code quality checks and tests based on specific trigger strategy.
 - **Building**: Builds Docker images and push it to a container registry.
 - **Running**: Runs Docker containers and ensure the api working successfully.
 
@@ -213,7 +213,7 @@ To run tests:
 
 ## 📬 Contact
 
-For questions or contributions, feel free to reach out via [GitHub Issues](https://github.com/YousofDev/busticketing/issues) or connect with me on [Email](yousofdevpro@gmail.com).
+For questions or contributions, feel free to reach out via [GitHub Issues](https://github.com/YousofDev/busticketing/issues) or connect with me on yousofdevpro@gmail.com.
 
 ---
 
