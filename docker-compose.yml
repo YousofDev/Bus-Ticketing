@@ -49,7 +49,7 @@ services:
       - test-data:/var/lib/postgresql/data
     networks:
       - app-network
-
+      
 networks:
   app-network:
     driver: bridge
