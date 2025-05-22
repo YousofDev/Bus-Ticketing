@@ -35,7 +35,7 @@ public class UserController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public List<UserDtoResponse> getUserById(@PathVariable Long id) {
         return userService.getUsers();
     }
@@ -46,5 +46,12 @@ public class UserController {
             @PathVariable Long id,
             @Validated @RequestBody UserRequestDto userRequestDto) {
         return userService.updateUserById(userRequestDto, id);
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
 }

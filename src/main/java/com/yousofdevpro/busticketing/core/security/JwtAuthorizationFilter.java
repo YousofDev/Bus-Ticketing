@@ -1,6 +1,6 @@
 package com.yousofdevpro.busticketing.core.security;
 
-import static com.yousofdevpro.busticketing.core.config.Constants.PERMITTED_URLS;
+import static com.yousofdevpro.busticketing.core.util.Constants.PERMITTED_URLS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yousofdevpro.busticketing.core.exception.AuthenticationException;
 import com.yousofdevpro.busticketing.core.exception.AuthorizationException;
@@ -23,9 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 @AllArgsConstructor

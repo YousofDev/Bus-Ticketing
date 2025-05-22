@@ -1,4 +1,4 @@
-package com.yousofdevpro.busticketing.core.config;
+package com.yousofdevpro.busticketing.core.util;
 
 import java.util.Arrays;
 import java.util.HashSet;

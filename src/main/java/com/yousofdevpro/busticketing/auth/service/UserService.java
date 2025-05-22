@@ -94,5 +94,7 @@ public class UserService {
                 .build();
     }
     
-    
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 }

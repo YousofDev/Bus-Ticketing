@@ -9,7 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.yousofdevpro.busticketing.core.config.Constants.PERMITTED_URLS;
+import static com.yousofdevpro.busticketing.core.util.Constants.PERMITTED_URLS;
 
 @Configuration
 @EnableMethodSecurity
