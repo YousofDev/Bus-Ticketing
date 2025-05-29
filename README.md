@@ -1,6 +1,6 @@
 # Bus Ticketing System
 
-A robust **Bus Ticketing System** built with **Java** and **Spring Boot**, designed to streamline bus travel operations for customers, staff, and administrators. This application provides a secure, user-friendly platform for managing user authentication, bus schedules, routes, appointments, tickets, and user accounts, with a focus on modern development practices including comprehensive testing, CI/CD, and containerization.
+An advanced **Bus Ticketing System** built using **Java** and **Spring Boot**, created to facilitate efficient bus travel management for passengers, staff, and administrators alike. This solution provides a secure and intuitive interface for handling user authentication, scheduling, route management, ticket reservations, and account administration. Developed following best practices, it incorporates extensive testing, continuous integration and delivery (CI/CD), and containerization to ensure robustness and scalability.
 
 ---
 
