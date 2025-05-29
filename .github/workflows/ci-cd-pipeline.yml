@@ -1,9 +1,11 @@
 name: CI Pipeline for Spring Boot App
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:  
 
 jobs:
   test:
